@@ -145,5 +145,14 @@ namespace FashionShop.Models
                 return false;
             }
         }
+        public List<Product> Search(string productName)
+        {
+            IQueryable<Product> model = db.Products;
+            if (!string.IsNullOrEmpty(productName))
+            {
+                model = model.Where(x => x.Name.Contains(productName));
+            }
+            return model.Where(x=>x.Status == true && x.ProductCategory.Status == true).ToList();
+        }
     }
 }

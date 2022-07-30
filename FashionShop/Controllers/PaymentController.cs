@@ -25,7 +25,7 @@ namespace FashionShop.Controllers
             string accessKey = "iPXneGmrJH0G8FOP";
             string serectkey = "sFcbSGRSJjwGxwhhcEktCHWYUuTuPNDB";
             string orderInfo = "Thanh toán bằng ví điện tử MoMo";
-            string returnUrl = "https://localhost:44317/ConfirmPaymentClient";
+            string returnUrl = "http://xuannguyen-001-site1.ftempurl.com/ConfirmPaymentClient";
             string notifyurl = "http://ba1adf48beba.ngrok.io/Home/SavePayment"; //lưu ý: notifyurl không được sử dụng localhost, có thể sử dụng ngrok để public localhost trong quá trình test
             cartModel = new CartModel();
             string amount = cartModel.getCartTotal().ToString();
@@ -96,8 +96,11 @@ namespace FashionShop.Controllers
                 order.ShipID = ShipID;
                 order.PaymentID = paymentID;
 
-                var User = (UserLogin)Session[Constant.CUSTOMER_SESSION];
-                order.CustomerID = User.UserID;
+                var userSess = (UserLogin)Session[Constant.CUSTOMER_SESSION];
+                CustomerModel customerModel = new CustomerModel();
+
+                var user = customerModel.GetByUsername(userSess.Username);
+                order.CustomerID = user.ID;
 
                 orderModel = new OrderModel();
                 var orderID = orderModel.Insert(order);
@@ -123,51 +126,54 @@ namespace FashionShop.Controllers
                         orderDetailModel.Insert(orderDetail);
                     }
                 }
-                string body = System.IO.File.ReadAllText(Server.MapPath("~/Assets/template/order.html"));
 
-
-                body = body.Replace("{{OrderID}}", orderID.ToString());
-                body = body.Replace("{{CreateDate}}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
-                body = body.Replace("{{Email}}", User.Email);
-                body = body.Replace("{{CustomerName}}", ship.Name);
-                body = body.Replace("{{Address}}", ship.Address);
-                body = body.Replace("{{Phone}}", ship.Phone);
-
-                body = body.Replace("{{OrderTotal}}", cartModel.getCartTotal().ToString("N0")+" VND");
-                body = body.Replace("{{Total}}", cartModel.getCartTotal().ToString("N0")+" VNĐ");
-                if (paymentID == 1)
+                if (user.EmailConfirmed == true)
                 {
-                    body = body.Replace("{{PaymentStatus}}", "Chưa thanh toán");
-                    body = body.Replace("{{PaymentMethod}}", "Thanh toán khi nhận hàng");
-                }
-                else
-                {
-                    body = body.Replace("{{PaymentStatus}}", "Đã thanh toán");
-                    if (paymentID == 2)
+
+                    string body = System.IO.File.ReadAllText(Server.MapPath("~/Assets/template/order.html"));
+                    body = body.Replace("{{OrderID}}", orderID.ToString());
+                    body = body.Replace("{{CreateDate}}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
+                    body = body.Replace("{{Email}}", user.Email);
+                    body = body.Replace("{{CustomerName}}", ship.Name);
+                    body = body.Replace("{{Address}}", ship.Address);
+                    body = body.Replace("{{Phone}}", ship.Phone);
+
+                    body = body.Replace("{{OrderTotal}}", cartModel.getCartTotal().ToString("N0") + " VND");
+                    body = body.Replace("{{Total}}", cartModel.getCartTotal().ToString("N0") + " VNĐ");
+                    if (paymentID == 1)
                     {
-                        body = body.Replace("{{PaymentMethod}}", "Ví điện tử MoMo");
+                        body = body.Replace("{{PaymentStatus}}", "Chưa thanh toán");
+                        body = body.Replace("{{PaymentMethod}}", "Thanh toán khi nhận hàng");
                     }
-                }
-                string products = "";
-                foreach(var item in orderDetailModel.ListByOrderID(orderID))
-                {
-                    var productdetails = productDetailModel.GetByID(item.ProductDetailID);
-                    var total = item.Price * item.Quantity;
-                    products += String.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td></tr>",
-                        item.ProductName,
-                        productdetails.Size.Code,
-                        productdetails.Color.Name,
-                        item.Price.GetValueOrDefault().ToString("N0")+" VND",
-                        item.Quantity,
-                        total.GetValueOrDefault().ToString("N0")+" VND");
-                }
-                body = body.Replace("{{Products}}", products);
+                    else
+                    {
+                        body = body.Replace("{{PaymentStatus}}", "Đã thanh toán");
+                        if (paymentID == 2)
+                        {
+                            body = body.Replace("{{PaymentMethod}}", "Ví điện tử MoMo");
+                        }
+                    }
+                    string products = "";
+                    foreach (var item in orderDetailModel.ListByOrderID(orderID))
+                    {
+                        var productdetails = productDetailModel.GetByID(item.ProductDetailID);
+                        var total = item.Price * item.Quantity;
+                        products += String.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td></tr>",
+                            item.ProductName,
+                            productdetails.Size.Code,
+                            productdetails.Color.Name,
+                            item.Price.GetValueOrDefault().ToString("N0") + " VND",
+                            item.Quantity,
+                            total.GetValueOrDefault().ToString("N0") + " VND");
+                    }
+                    body = body.Replace("{{Products}}", products);
 
-                MailHelper.SendMail("Thông tin đơn hàng", body, User.Email);
+                    MailHelper.SendMail("Thông tin đơn hàng", body, user.Email);
 
-                cartModel.DeleteAll();
-                TempData["Message"] = "Thanh toán đơn hàng thành công. Khách hàng lòng kiểm tra email để xem thông tin thanh toán";
-                TempData["Status"] = "success";
+                    cartModel.DeleteAll();
+                    TempData["Message"] = "Thanh toán đơn hàng thành công. Khách hàng lòng kiểm tra email để xem thông tin thanh toán";
+                    TempData["Status"] = "success";
+                }
             }
             return RedirectToRoute("giohang");
         }

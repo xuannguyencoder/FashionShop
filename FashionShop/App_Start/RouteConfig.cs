@@ -83,6 +83,18 @@ namespace FashionShop
                 defaults: new { controller = "Home", action = "Index" },
                 namespaces: new[] { "FashionShop.Controllers" }
             );
+            routes.MapRoute(
+                name: "timkiemphantrang",
+                url: "tim-kiem/{keyword}/page={pageIndex}",
+                defaults: new { controller = "Home", action = "SearchProduct" },
+                namespaces: new[] { "FashionShop.Controllers" }
+            );
+            routes.MapRoute(
+                name: "timkiemsanpham",
+                url: "tim-kiem",
+                defaults: new { controller = "Home", action = "SearchProduct" },
+                namespaces: new[] { "FashionShop.Controllers" }
+            );
             //AritcleController
             routes.MapRoute(
                 name: "chitietbaiviet",
@@ -104,13 +116,13 @@ namespace FashionShop
                 namespaces: new[] { "FashionShop.Controllers" }
             );
             routes.MapRoute(
-                name: "danhmucsanpham",
+                name: "danhmucsanphamphantrang",
                 url: "{Alias}/page={pageIndex}",
                 defaults: new { controller = "Category", action = "Index" },
                 namespaces: new[] { "FashionShop.Controllers" }
             );
             routes.MapRoute(
-                name: "danhmucsanphamphantrang",
+                name: "danhmucsanpham",
                 url: "{Alias}",
                 defaults: new { controller = "Category", action = "Index" },
                 namespaces: new[] { "FashionShop.Controllers" }

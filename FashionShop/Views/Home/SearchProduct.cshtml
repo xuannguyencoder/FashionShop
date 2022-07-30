@@ -1,4 +1,9 @@
 ﻿@model List<FashionShop.Models.EF.Product>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
 <style>
     .active_page {
         background: #0d0d0d;
@@ -12,9 +17,9 @@
             <div class="col-lg-12">
                 <div class="breadcrumb__links">
                     <a href="/trang-chu"><i class="fa fa-home"></i> Trang chủ</a>
+                    <a href="#"> Tìm kiếm</a>
                     <span>
-                        @if (Model.Count > 0)
-                        {@Model.First().ProductCategory.Name}
+                        @ViewBag.Keyword
                     </span>
                 </div>
             </div>
@@ -31,12 +36,12 @@
                 <div class="row">
                     @foreach (var item in Model)
                     {
-                        var image = item.ProductImages.OrderBy(x=>x.ColorCode).ThenBy(x => x.DisplayOrder).FirstOrDefault(x => x.ProductID == item.ID);
+                        var image = item.ProductImages.OrderBy(x => x.ColorCode).ThenBy(x => x.DisplayOrder).FirstOrDefault(x => x.ProductID == item.ID);
                         string imageName = "";
                         if (image != null) { imageName = image.Image; }
                         <div class="col-lg-4 col-md-6">
                             <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="'../Assets/images/uploads/products/@imageName'">
+                                <div class="product__item__pic set-bg" data-setbg="'../../Assets/images/uploads/products/@imageName'">
                                     @if (item.PromotionPrice > 0)
                                     {
                                         <div class="label sale">Giảm giá</div>
@@ -69,14 +74,14 @@
                         //create numeric link
                         var startPageIndex = Math.Max(1, currentPage - pageDisplay / 2);
                         var endPageIndex = Math.Min(totalPage, currentPage + pageDisplay / 2);
-                        
+
 
                         <div class="col-lg-12 text-center">
                             <div class="pagination__option">
                                 @if (currentPage > ViewBag.First)
                                 {
-                                    <a href="/@ViewBag.Alias/page=@ViewBag.First"><i class="fa fa-angle-double-left"></i></a>
-                                    <a href="/@ViewBag.Alias/page=@ViewBag.Prev"><i class="fa fa-angle-left"></i></a>
+                                    <a href="/tim-kiem/@ViewBag.keyword/page=@ViewBag.First"><i class="fa fa-angle-double-left"></i></a>
+                                    <a href="/tim-kiem/@ViewBag.keyword/page=@ViewBag.Prev"><i class="fa fa-angle-left"></i></a>
                                 }
                                 @for (int i = startPageIndex; i <= endPageIndex; i++)
                                 {
@@ -86,17 +91,17 @@
                                     }
                                     else
                                     {
-                                        <a href="/@ViewBag.Alias/page=@i">@i</a>
+                                        <a href="/tim-kiem/@ViewBag.keyword/page=@i">@i</a>
                                     }
 
                                 }
                                 @if (currentPage < totalPage)
                                 {
-                                    <a href="/@ViewBag.Alias/page=@ViewBag.Next"><i class="fa fa-angle-right"></i></a>
-                                    <a href="/@ViewBag.Alias/page=@ViewBag.Last"><i class="fa fa-angle-double-right"></i></a>
+                                    <a href="/tim-kiem/@ViewBag.keyword/page=@ViewBag.Next"><i class="fa fa-angle-right"></i></a>
+                                    <a href="/tim-kiem/@ViewBag.keyword/page=@ViewBag.Last"><i class="fa fa-angle-double-right"></i></a>
                                 }
                             </div>
-                        </div>       
+                        </div>
                     }
                 </div>
             </div>

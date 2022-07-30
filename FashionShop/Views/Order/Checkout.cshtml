@@ -32,7 +32,7 @@
                 </div>
             </div>
         }
-        @using (Html.BeginForm("CheckOut", "Order", FormMethod.Post, new { @class = "checkout__form" }))
+        @using (Html.BeginForm("Checkout", "Order", FormMethod.Post, new { @class = "checkout__form" }))
         {
             @Html.AntiForgeryToken()
             <div class="row">
@@ -94,6 +94,7 @@
                                     </label>
                                 </div>
                             }
+                            @Html.ValidationMessage("PaymentMethod", "", new { @class = "text-danger" })
                         </div>
                         <button type="submit" class="site-btn">Đặt hàng</button>
                     </div>
