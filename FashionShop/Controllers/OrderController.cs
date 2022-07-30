@@ -12,9 +12,9 @@ namespace FashionShop.Controllers
 {
     public class OrderController : Controller
     {
-        CustomerModel cusModel = null;
-        PaymentModel paymentModel = null;
-        CartModel cartModel = null;
+        CustomerModel cusModel = new CustomerModel();
+        PaymentModel paymentModel = new PaymentModel();
+        CartModel cartModel = new CartModel();
         public ActionResult Checkout()
         {
             if (Session[Constant.CartSession] == null)
@@ -22,8 +22,7 @@ namespace FashionShop.Controllers
                 TempData["Message"] = "Thêm sản phẩm vào giỏ hàng trước khi thanh toán";
                 TempData["Status"] = "success";
                 return RedirectToRoute("giohang");
-            }
-            cartModel = new CartModel();    
+            } 
             var cart = cartModel.ListAll();
             if (cart.Count==0)
             {
@@ -38,12 +37,12 @@ namespace FashionShop.Controllers
                 TempData["Status"] = "success";
                 return RedirectToRoute("dangnhap");
             }
-            cusModel = new CustomerModel();
+
             var customer = cusModel.GetByID(user.UserID);
             ShipViewModel shipView;
             shipView = new ShipViewModel(customer.FirstName, customer.LastName, customer.Address, customer.Phone);
 
-            paymentModel = new PaymentModel();
+
             ViewBag.Cart = cart;
             ViewBag.CartTotal = cartModel.getCartTotal();
             ViewBag.Payments = paymentModel.ListAll();
@@ -55,35 +54,46 @@ namespace FashionShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                if (form["payment_method"]!=null)
                 {
-                    int paymentID = int.Parse(form["payment_method"].ToString());
-                    paymentModel = new PaymentModel();
-                    if (paymentModel.GetByID(paymentID) ==null)
+                    try
+                    {
+                        int paymentID = int.Parse(form["payment_method"].ToString());
+                        if (paymentModel.GetByID(paymentID) ==null)
+                        {
+                            return View(shipViewModel);
+                        }
+                        switch (paymentID)
+                        {
+                            case 1:
+                                Session["ShipViewModel"] = shipViewModel;
+                                Session["PaymentID"] = 1;
+                                return RedirectToAction("ConfirmPaymentClient", "Payment");
+                            case 2:
+                                Session["ShipViewModel"] = shipViewModel;
+                                Session["PaymentID"] = 2;
+                                return RedirectToAction("MomoPayment", "Payment");
+                            case 3:
+                                Session["PaymentID"] = 3;
+                                Session["ShipViewModel"] = shipViewModel;
+                                return RedirectToAction("PaypalPayment", "Payment");
+                        }  
+                    }
+                    catch
                     {
                         return View(shipViewModel);
                     }
-                    switch (paymentID)
-                    {
-                        case 1:
-                            Session["ShipViewModel"] = shipViewModel;
-                            Session["PaymentID"] = 1;
-                            return RedirectToAction("ConfirmPaymentClient", "Payment");
-                        case 2:
-                            Session["ShipViewModel"] = shipViewModel;
-                            Session["PaymentID"] = 2;
-                            return RedirectToAction("MomoPayment", "Payment");
-                        case 3:
-                            Session["PaymentID"] = 3;
-                            Session["ShipViewModel"] = shipViewModel;
-                            return RedirectToAction("PaypalPayment", "Payment");
-                    }  
                 }
-                catch
+                else
                 {
-                    return View(shipViewModel);
+                    ModelState.AddModelError("PaymentMethod", "Vui lòng chọn phương thức thanh toán");
                 }
             }
+
+            var cart = cartModel.ListAll();
+            ViewBag.Cart = cart;
+            ViewBag.CartTotal = cartModel.getCartTotal();
+            ViewBag.Payments = paymentModel.ListAll();
             return View(shipViewModel);
         }
     }
