@@ -1,0 +1,87 @@
+﻿@model List<FashionShop.Models.EF.ProductDetail>
+@using FashionShop.Models.ViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
+    var proImages = (List<ProductImageViewModel>)ViewBag.proImages;
+}
+<span id="message" class="d-none">@TempData["Message"]</span>
+<span id="status" class="d-none">@TempData["Status"]</span>
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h3 style="color: #593bdb">Quản lý sản phẩm</h3>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Sản phẩm</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Chi tiết</a></li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <div>
+                <a href="/admin/san-pham/chi-tiet/them-@ViewBag.ProductID" class="btn btn-primary">Thêm mới</a>
+            </div>
+        </div>
+    </div>
+    <!-- row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="display" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    <th>Hình ảnh</th>
+                                    <th>Kích thước</th>
+                                    <th>Màu</th>
+                                    <th>Số lượng</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: #6e6e6e">
+                                @foreach (var item in Model)
+                                {
+                                    var proImage = proImages.FirstOrDefault(x => x.ColorCode == item.ColorCode);
+                                    <tr>
+                                        <td>
+                                            @if (proImage != null)
+                                            {
+                                                <img style="width:100px;height:auto" src="~/Assets/images/uploads/products/@proImage.Image">
+                                            }
+                                            else { <img style="width:100px;height:auto" src="~/Assets/images/uploads/products/">}
+                                        </td>
+                                        <td>@item.Size.Code</td>
+                                        <td>@item.Color.Name</td>
+                                        <td>@item.Quantity</td>
+                                        <td>
+                                            <a href="/admin/san-pham/chi-tiet/chinh-sua/@item.Product.Alias-@item.ID" style="color:green">
+                                                <i class="fa-solid fa-pen-to-square fa-xl"></i>
+                                            </a>
+                                            <a href="@Url.Action("Delete", new {ID = item.ID})" style="color:crimson">
+                                                <i class="fa-solid fa-trash-can fa-xl"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Assets/Admin/vendor/toastr/js/toastr.min.js"></script>
+    <script src="~/Assets/js/toastr.js"></script>
+
+    <script src="~/Assets/Admin/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/Assets/Admin/js/plugins-init/datatables.init.js"></script>
+}
+@section Links{
+    <link rel="stylesheet" href="~/Assets/Admin/vendor/toastr/css/toastr.min.css">
+    <link href="~/Assets/Admin/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
+}

@@ -1,0 +1,28 @@
+﻿@model List<FashionShop.Models.EF.ProductReview>
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        <div class="blog__comment__item">
+            <div class="blog__comment__item__pic">
+                <img src="../Assets/User/img/blog/details/comment-1.jpg" alt="">
+            </div>
+            <div class="blog__comment__item__text">
+                <h6>@item.Customer.FirstName @item.Customer.LastName</h6>
+                <p>
+                    @item.Content
+                </p>
+                <ul>
+                    <li><i class="fa fa-clock-o"></i> @item.CreatedDate</li>
+                    <li><i class="fa fa-heart-o"></i> 0</li>
+                    <li><i class="fa fa-share"></i> 0</li>
+                </ul>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>Chưa có bình luận nào!!!</p>
+}
+

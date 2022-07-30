@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+@section _Instagram{
+    @{Html.RenderAction("_Instagram", "Home");}
+}
+@if (ViewBag.Type == "danhmucsanpham")
+{
+    Html.RenderAction("_ProductList", "Product", new { CateID = ViewBag.ID, pageIndex = ViewBag.pageIndex, alias= ViewBag.Alias });
+}
+else if (ViewBag.Type == "danhmucbaiviet")
+{
+    Html.RenderAction("_ArticleList", "Article", new { CateID = ViewBag.ID });
+}

@@ -1,0 +1,123 @@
+﻿@model FashionShop.Models.EF.Content
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    var newActicles = (List<FashionShop.Models.EF.Content>)ViewBag.articles;
+}
+
+@section _Instagram{
+    @{Html.RenderAction("_Instagram", "Home");}
+}
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="/"><i class="fa fa-home"></i> Trang chủ</a>
+                    <a href="#">@Model.Category.Name</a>
+                    <span>@Model.Name</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="blog-details spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-8">
+                <div class="blog__details__content">
+                    <div class="blog__details__item">
+                        <img src="../Assets/images/uploads/article/" alt="">
+                        <div class="blog__details__item__title">
+                            <span class="tip">@Model.Category.Name</span>
+                            <h4>@Model.Name</h4>
+                            <ul>
+                                <li>Tác giả <span>@Model.CreatedBy</span></li>
+                                <li>@Model.CreatedDate</li>
+                                @*<li>39 Comments</li>*@
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="blog__details__desc">
+                        @Html.Raw(Model.Content1)
+                    </div>
+                    <div class="blog__details__tags">
+                        @{ string link = "";}
+                        @foreach (var item in Model.ContentTags)
+                        {
+                            link = "/tag/" + item.TagID;
+                            <a href="@link">@item.Tag.Name</a>
+                        }
+                    </div>
+                    <div class="blog__details__btns">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="blog__details__btn__item">
+                                    <h6><a href="#"><i class="fa fa-angle-left"></i>Bài trước</a></h6>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="blog__details__btn__item blog__details__btn__item--next">
+                                    <h6><a href="#">Bài kế tiếp <i class="fa fa-angle-right"></i></a></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer__newslatter">
+                        <form action="" method="post">
+                            <input name="review_content" placeholder="Nội dung"/>
+                            <button type="submit" class="site-btn">Gửi</button>
+                        </form>
+                    </div>
+                    <div class="blog__details__comment">
+                        <h5>0 bình luận</h5>
+                        <a href="#" class="leave-btn">Bình luận</a>
+                        <p>Chưa có bình luận nào!!!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4">
+                <div class="blog__sidebar">
+                    <div class="blog__sidebar__item">
+                        <div class="section-title">
+                            <h4>Danh mục</h4>
+                        </div>
+                        <ul>
+                            <li><a href="/">Tất cả <span>(12)</span></a></li>
+                            <li><a href="/thoi-trang-nam">Thời trang nam <span>(6)</span></a></li>
+                            <li><a href="/thoi-trang-nữ">Thời trang nữ <span>(6)</span></a></li>
+                        </ul>
+                    </div>
+                    <div class="blog__sidebar__item">
+                        <div class="section-title">
+                            <h4>Bài viết mới nhất</h4>
+                        </div>
+                        @foreach (var item in newActicles)
+                        {
+                            <a href="/bai-viet/@item.Alias" class="blog__feature__item">
+                                <div class="blog__feature__item__pic">
+                                    <img src="~/Assets/images/uploads/articles/@item.Image" width="110" style="max-height:73px" alt="">
+                                </div>
+                                <div class="blog__feature__item__text">
+                                    <h6>@item.Name</h6>
+                                    <span>@item.CreatedDate</span>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                    <div class="blog__sidebar__item">
+                        <div class="section-title">
+                            <h4>Tags</h4>
+                        </div>
+                        <div class="blog__sidebar__tags">
+                            @foreach (var item in Model.ContentTags)
+                            {
+                                <a href="/tag/@item.Tag.ID">@item.Tag.Name</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

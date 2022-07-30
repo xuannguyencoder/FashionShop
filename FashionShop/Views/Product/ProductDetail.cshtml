@@ -1,0 +1,198 @@
+﻿@model FashionShop.Models.EF.Product
+@using FashionShop.Models.ViewModel
+@{
+    ViewBag.Title = "ProductDetail";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    var Images = (List<ProductImageViewModel>)ViewBag.Images;
+}
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="/"><i class="fa fa-home"></i> Trang chủ</a>
+                    <a href="#"><i class="fa fa-home"></i>@Model.ProductCategory.Name</a>
+                    <span>@Model.Name</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="product-details spad">
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["Status"]" role="alert">
+            @TempData["Message"]
+        </div>
+    }
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="product__details__pic">
+                    <div class="product__details__pic__left product__thumb nice-scroll">
+                        @{ bool flag = true; string active = "active"; int number = 0;}
+                        @foreach (var item in Images.OrderBy(x => x.ColorCode).ThenBy(x => x.DisplayOrder))
+                        {
+                            number++;
+                            <a class="pt @if (flag) { flag = false; @active}" href="#product-@number">
+                                <img src="../Assets/images/uploads/products/@item.Image" alt="">
+                            </a>
+                        }
+                    </div>
+                    <div class="product__details__slider__content">
+                        <div class="product__details__pic__slider owl-carousel">
+                            @{number = 0;}
+                            @foreach (var item in Images.OrderBy(x => x.ColorCode).ThenBy(x => x.DisplayOrder))
+                            {
+                                number++;
+                                <img data-hash="product-@number" class="product__big__img" src="../Assets/images/uploads/products/@item.Image" alt="">
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="product__details__text">
+                    <h3>@Model.Name @*<span>Brand: SKMEIMore Men Watches from SKMEI</span>*@</h3>
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        @*<span>( @Model.ViewCount.GetValueOrDefault() lượt xem )</span>*@
+                    </div>
+                    @if (Model.PromotionPrice.GetValueOrDefault(0) == 0)
+                    {
+                        <div class="product__details__price">@Model.Price.GetValueOrDefault(0).ToString("N0") vnđ</div>
+                    }
+                    else
+                    {
+                        <div class="product__details__price">@Model.PromotionPrice.GetValueOrDefault(0).ToString("N0") vnđ <span>@Model.Price.GetValueOrDefault(0).ToString("N0") vnđ</span></div>
+                    }
+                    <div class="description__product">@Html.Raw(Model.Description)</div>
+                    @using (Html.BeginForm("AddItem", "Cart", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("ProductID", Model.ID)
+                        <div class="product__details__button">
+                            <div class="quantity">
+                                <span>Số lượng:</span>
+                                <div class="pro-qty">
+                                    <input type="text" name="quantity" value="1">
+                                </div>
+                            </div>
+                            <button style="border:none" class="cart-btn"><span class="icon_bag_alt"></span> Thêm vào giỏ hàng</button>
+                            <ul>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_adjust-horiz"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__details__widget">
+                            <ul>
+                                @*<li>
+                                        <span>Availability:</span>
+                                        <div class="stock__checkbox">
+                                            <label for="stockin">
+                                                In Stock
+                                                <input type="checkbox" id="stockin">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                    </li>*@
+                                <li>
+                                    <span>Màu:</span>
+                                    <div class="color__checkbox">
+                                        @{ flag = true; string check = "checked"; number = 0;}
+                                        @foreach (var item in Model.ProductDetails.Where(x => x.ProductID == Model.ID).ToList())
+                                        {
+                                            number++;
+                                            <label for="color-@number">
+                                                <input type="radio" name="color" class="color_product" value="@item.ColorCode" id="color-@number" @if (flag) { flag = false; @check }>
+                                                <span class="checkmark" style="background-color:@("#" + item.ColorCode)"></span>
+                                            </label>
+                                        }
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>Kích thước:</span>
+                                    <div class="size__btn">
+                                        @{ flag = true; number = 0;}
+                                        @foreach (var item in Model.ProductDetails.Where(x => x.ProductID == Model.ID).ToList())
+                                        {
+                                            number++;
+                                            <label for="size-@number" class="@if (flag) { @active }">
+                                                <input type="radio" class="size_product" name="size" value="@item.Size.ID" @if (flag) { flag = false; @check } id="size-@number">
+                                                @item.Size.Code
+                                            </label>
+                                        }
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>Khuyến mãi:</span>
+                                    <p>Miễn phí vận chuyển</p>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="product__details__tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Mô tả</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Bình luận ( @Model.ProductReviews.Count() )</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="description__product">@Html.Raw(Model.Detail)</div>
+                        </div>
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <div class="footer__newslatter">
+                                <form action="@Url.Action("SendReview", new {ID = Model.ID})" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input name="review_content" />
+                                    <button type="submit" class="site-btn">Gửi</button>
+                                </form>
+                            </div>
+                            <div class="blog__details__comment">
+                                <h5>@Model.ProductReviews.Count() bình luận</h5>
+                                <a href="#" class="leave-btn">Bình luận</a>
+                            </div>
+                            @{ Html.RenderAction("_ProductReview", "Product", new { ProductID = Model.ID }); }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @{ Html.RenderAction("_RelatedProducts", "Product", new { ProductID = Model.ID, CategoryID = Model.ProductCategoryID });}
+    </div>
+</section>
+@section jsFooter{
+    <script>
+        var color_products = document.getElementsByClassName('color_product');
+        for (option of color_products) {
+            option.onclick = function () {
+                for (option of color_products) {
+                    option.removeAttribute("checked");
+                }
+                this.setAttribute("checked", "checked");
+            }
+        }
+        var size_products = document.getElementsByClassName('size_product');
+        for (option of size_products) {
+            option.onclick = function () {
+                for (option of size_products) {
+                    option.removeAttribute("checked");
+                }
+                this.setAttribute("checked", "checked");
+            }
+        }
+
+    </script>
+}

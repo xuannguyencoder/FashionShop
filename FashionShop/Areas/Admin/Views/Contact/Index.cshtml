@@ -1,0 +1,146 @@
+﻿@model FashionShop.Models.EF.Contact
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h3 style="color: #593bdb">Thông tin cửa hàng</h3>
+            </div>
+        </div>
+    </div>
+    <!-- row -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="accordion-eleven" class="accordion accordion-rounded-stylish accordion-bordered">
+                        <div class="accordion__item">
+                            <div class="accordion__header accordion__header--primary" data-toggle="collapse" data-target="#rounded-stylish_collapseOne">
+                                <span class="accordion__header--icon"></span>
+                                <span class="accordion__header--text">Liên hệ</span>
+                                <span class="accordion__header--indicator"></span>
+                            </div>
+                            <div id="rounded-stylish_collapseOne" class="collapse accordion__body show" data-parent="#accordion-eleven">
+                                <div class="accordion__body--text">
+                                    @Html.Raw(Model.Content)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="basic-form">
+                        <form method="post">
+                            <div class="form-row">
+                                <input type="text" class="form-control d-none" value="@Model.ID" id="contact_id">
+                                <div class="form-group col-md-6">
+                                    <label>Tọa độ x</label>
+                                    @Html.TextBoxFor(x => x.PointX, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Tọa độ y</label>
+                                    @Html.TextBoxFor(x => x.PointY, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mr-2" id="submitform">Cập nhật</button>
+                            <a href="/admin/thong-tin-lien-he/chinh-sua-@Model.ID" class="btn btn-outline-primary">Chỉnh sửa</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="map" id="mapCanvas"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#submitform").on("click", function () {
+                var id = $("#contact_id").val();
+                var pointx = $("#PointX").val();
+                var pointy = $("#PointY").val();
+                $.ajax({
+                    url: '/Admin/Contact/UpdatePoint',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        ID: id,
+                        pointX: pointx,
+                        pointY: pointy
+                    },
+                    success: function (data) {
+                        if (data.status == true) {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Cập nhật vị trí thành công',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            google.maps.event.addDomListener(window, 'load', getPoint);
+                        }
+                    }
+                });
+            });
+        });
+
+        function initMap(x,y) {
+            var uluru = { lat: x, lng: y };
+            var map = new google.maps.Map(document.getElementById("mapCanvas"),{
+                zoom: 16,
+                center: uluru,
+            });
+
+            var contentString = '@Html.Raw(Model.Content)';
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+            });
+
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map,
+                title: "Uluru (Ayers Rock)",
+            });
+
+            marker.addListener("click", () => {
+                infowindow.open({
+                    anchor: marker,
+                    map,
+                    shouldFocus: false,
+                });
+            });
+        }
+        function getPoint() {
+            $.ajax({
+                type: "POST",
+                url: '/Admin/Contact/GetPoint',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                dataType: "json",
+                success: function (data) {
+                    let x = Number(data.pointX);
+                    let y = Number(data.pointY);
+                    initMap(x,y);
+                }
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', getPoint);
+    </script>
+}
+@section Links{
+    <link href="~/Assets/Admin/vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        #mapCanvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+}

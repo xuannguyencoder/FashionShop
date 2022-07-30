@@ -1,0 +1,194 @@
+﻿@model FashionShop.Models.EF.Menu
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
+}
+<div class="container-fluid">
+    @using (Html.BeginForm("Edit", "Menu", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h3 style="color: #593bdb">Quản lý Menu</h3>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Mục menu</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Chỉnh sửa</a></li>
+                    </ol>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <div>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Trở về</a>
+                </div>
+            </div>
+        </div>
+        <!-- row -->
+        <div class="row">
+            <div class="col-xl-8 col-lg-8 col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.LabelFor(model => model.Name)
+                                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-6">
+                                    @Html.LabelFor(model => model.Alias)
+                                    @Html.TextBoxFor(model => model.Alias, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Alias, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.Type)
+                                    <div class="input-group mb-12">
+                                        @Html.TextBox("ViewType", "", new { @class = "form-control", @readonly = "readonly" })
+                                        @Html.TextBoxFor(model => model.Type, new { @class = "form-control d-none", @readonly = "readonly" })
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exampleModalCenter">Lựa chọn</button>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12" id="GroupCategory" style="display:none">
+                                    <label>Danh mục sản phẩm</label>
+                                    @Html.DropDownList("CategoryID", new List<SelectListItem> { new SelectListItem() }, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.Link)
+                                    @Html.TextBoxFor(model => model.Link, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.MenuTypeID)
+                                    @Html.DropDownListFor(model => model.MenuTypeID, (IEnumerable<SelectListItem>)ViewBag.MenuTypeList, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.MenuTypeID, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.ParentID)
+                                    @Html.DropDownListFor(model => model.ParentID, (IEnumerable<SelectListItem>)ViewBag.MenuList, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ParentID, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.DisplayOrder)
+                                    @Html.DropDownListFor(model => model.DisplayOrder, (IEnumerable<SelectListItem>)ViewBag.MenuDisplayOrderList, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.DisplayOrder, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.Status)
+                                    @Html.DropDownListFor(model => model.Status, new List<SelectListItem>{
+                                            new SelectListItem() {Text = "Ẩn", Value="false"},
+                                            new SelectListItem() {Text = "Hiện", Value="true"}}, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Kiểu hiển thị mục menu</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.DropDownList("TypeModal", new List<SelectListItem>{
+                    new SelectListItem() {Text = "Url", Value="url"},
+                    new SelectListItem() {Text = "Danh mục sản phẩm", Value="danhmucsanpham"},
+                    new SelectListItem() {Text = "Bài viết", Value="baiviet"},
+                    new SelectListItem() { Text = "Danh mục bài viết", Value = "danhmucbaiviet" }}, new { @class = "form-control" })
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="submit_category">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/Assets/Admin/vendor/toastr/js/toastr.min.js"></script>
+    <script src="~/Assets/js/toastr.js"></script>
+    <script>
+        $(document).ready(function () {
+            const list = {
+                getCate: function () {
+                    $('#Link').attr('readonly', true);
+                    $('#GroupCategory').show();
+                    $.get("/Admin/Menu/GetList", { Type: valType , Link: url}, function (data) {
+                        $("#CategoryID").empty();
+                        $.each(data, function (index, row) {
+                            if (row.Selected) {
+                                $("#CategoryID").append("<option selected='selected' value='" + row.Value + "'>" + row.Text + "</option>")
+                            } else {
+                                $("#CategoryID").append("<option value='" + row.Value + "'>" + row.Text + "</option>")
+                            }
+                            
+                        });
+                    });
+                }
+            }
+            $("#MenuTypeID").change(function () {
+                $.get("/Admin/Menu/GetMenusByMenuType", { TypeID: $("#MenuTypeID").val() }, function (data) {
+                    $("#ParentID").empty();
+                    $.each(data, function (index, row) {
+                        $("#ParentID").append("<option value='" + row.Value + "'>" + row.Text + "</option>")
+                    });
+                });
+            });
+            $("#submit_category").on("click", function () {
+                txtType = $("#TypeModal option:selected").text();
+                valType = $("#TypeModal").val()
+                $("#ViewType").val(txtType);
+                $("#Type").val(valType);
+
+                $('#exampleModalCenter').modal('hide');
+                if (valType == "url") {
+                    $("#Link").val('#');
+                    $('#Link').attr('readonly', false);
+                    $("#GroupCategory").hide();
+                } else {
+                    list.getCate(valType);
+                }
+            });
+            var valType = $('#Type').val();
+            var url = $('#Link').val();
+            if (valType == "danhmucsanpham") {
+                $('#ViewType').val('Danh mục sản phẩm');
+                list.getCate(valType, url);
+            }
+            else if (valType == "danhmucbaiviet") {
+                $('#ViewType').val('Danh mục bài viết');
+                list.getCate(valType, url);
+            }
+            else if (valType == "url") {
+                $('#ViewType').val('Url');
+            }
+            
+        });
+    </script>
+}
+@section Links{
+    <link rel="stylesheet" href="~/Assets/Admin/vendor/toastr/css/toastr.min.css">
+    <script src="~/Assets/Admin/vendor/jquery/jquery.min.js"></script>
+}

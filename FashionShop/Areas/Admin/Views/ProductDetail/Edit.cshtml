@@ -1,0 +1,91 @@
+﻿@model FashionShop.Models.EF.ProductDetail
+@using FashionShop.Models.ViewModel;
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
+    ProductViewModel product = (ProductViewModel)ViewBag.product;
+}
+<span id="message" class="d-none">@TempData["Message"]</span>
+<span id="status" class="d-none">@TempData["Status"]</span>
+<div class="container-fluid">
+    @using (Html.BeginForm("Edit", "ProductDetail", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.Hidden("ProductID", product.ID, new { @class = "form-control d-none" })
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h3 style="color: #593bdb">Quản lý sản phẩm</h3>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Sản phẩm</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Chi tiết</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Chỉnh sửa</a></li>
+                    </ol>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <div>
+                    <button type="submit" name="btnAdd" class="btn btn-primary">Lưu</button>
+                    <a href="/admin/san-pham/chi-tiet/ID=@product.ID" class="btn btn-secondary">Trở về</a>
+                </div>
+            </div>
+        </div>
+        <!-- row -->
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    @Html.LabelFor(model => model.Product.Name)
+                                    <input type="text" class="form-control" readonly value="@product.Name" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    @Html.LabelFor(model => model.Product.ProductCategory.Name)
+                                    <input type="text" class="form-control" readonly value="@product.CateName" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.SizeID)
+                                    @Html.DropDownListFor(model => model.SizeID, (IEnumerable<SelectListItem>)ViewBag.SizeList, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.SizeID, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.ColorCode)
+                                    @Html.DropDownListFor(model => model.ColorCode, (IEnumerable<SelectListItem>)ViewBag.ColorList, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ColorCode, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.Quantity)
+                                    @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Hình ảnh</label>
+                                    <div class="input-group mb-3">
+                                        <div class="custom-file">
+                                            <label class="custom-file-label">Chọn file</label>
+                                            <input type="file" name="Image" id="fileInput" multiple class="custom-file-input">
+                                            @Html.ValidationMessage("Image", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script src="~/Assets/Admin/vendor/toastr/js/toastr.min.js"></script>
+    <script src="~/Assets/js/toastr.js"></script>
+}
+@section Links{
+    <link rel="stylesheet" href="~/Assets/Admin/vendor/toastr/css/toastr.min.css">
+    <script src="~/Assets/Admin/vendor/jquery/jquery.min.js"></script>
+}

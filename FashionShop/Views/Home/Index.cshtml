@@ -1,0 +1,123 @@
+﻿@model List<FashionShop.Models.EF.Product>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    var productMenus = (List<FashionShop.Models.EF.Menu>)ViewBag.ProductMenu;
+}
+@section _Categories{
+    @{Html.RenderAction("_Categories", "Home");}
+}
+@*@section _TrendSpad{
+    @{Html.RenderAction("_TrendSpad", "Home");}
+}*@
+@section _ServicesSpad{
+    @{Html.RenderAction("_ServicesSpad", "Home");}
+}
+@section _Instagram{
+    @{Html.RenderAction("_Instagram", "Home");}
+}
+@*@section _BannerBottom{
+    @{Html.RenderAction("_BannerBottom", "Home");}
+}*@
+<style>
+    .active_page {
+        background: #0d0d0d;
+        border-color: #0d0d0d;
+        color: #ffffff !important;
+    }
+</style>
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                <div class="section-title">
+                    <h4>Sản phẩm mới</h4>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-8">
+                <ul class="filter__controls">
+                    <li class="active" data-filter="*">Tất cả</li>
+                    @foreach (var item in productMenus)
+                    {
+                        <li data-filter=".@item.Alias">@item.Name</li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="row property__gallery">
+            @foreach (var item in Model)
+            {
+                var image = item.ProductImages.OrderBy(x => x.DisplayOrder).FirstOrDefault(x => x.ProductID == item.ID);
+                string imageName = "";
+                if (image != null) { imageName = image.Image; }
+                <div class="col-lg-3 col-md-4 col-sm-6 mix">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="'../Assets/images/uploads/products/@imageName'">
+                            @if (item.PromotionPrice > 0)
+                            {
+                                <div class="label sale">Giảm giá</div>
+                            }
+                            else
+                            {
+                                <div class="label new">Mới</div>
+                            }
+                            <ul class="product__hover">
+                                <li><a href="Assets/images/uploads/products/@imageName" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="/them-san-pham/@item.ID"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="/san-pham/@item.Alias">@item.Name</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">@item.Price.GetValueOrDefault(0).ToString("N0") vnđ</div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (ViewBag.TotalPage > 0)
+            {
+                var pageDisplay = (int)(ViewBag.MaxPage);
+                int totalPage = (int)ViewBag.TotalPage;
+                int currentPage = (int)ViewBag.Page;
+                //create numeric link
+                var startPageIndex = Math.Max(1, currentPage - pageDisplay / 2);
+                var endPageIndex = Math.Min(totalPage, currentPage + pageDisplay / 2);
+
+
+                <div class="col-lg-12 text-center">
+                    <div class="pagination__option">
+                        @if (currentPage > ViewBag.First)
+                        {
+                            <a href="/page=@ViewBag.First"><i class="fa fa-angle-double-left"></i></a>
+                            <a href="/page=@ViewBag.Prev"><i class="fa fa-angle-left"></i></a>
+                        }
+                        @for (int i = startPageIndex; i <= endPageIndex; i++)
+                        {
+                            if (currentPage == i)
+                            {
+                                <a href="javascript:void(0)" class="active_page">@i</a>
+                            }
+                            else
+                            {
+                                <a href="/page=@i">@i</a>
+                            }
+
+                        }
+                        @if (currentPage < totalPage)
+                        {
+                            <a href="/page=@ViewBag.Next"><i class="fa fa-angle-right"></i></a>
+                            <a href="/page=@ViewBag.Last"><i class="fa fa-angle-double-right"></i></a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,45 @@
+﻿@model List<FashionShop.Models.EF.Content>
+@{
+    ViewBag.Title = "Tag";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+@section _Instagram{
+    @{Html.RenderAction("_Instagram", "Home");}
+}
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="/"><i class="fa fa-home"></i> Trang chủ</a>
+                    <a href="#">Tag</a>
+                    <span>@ViewBag.TagName</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="blog spad">
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="blog__item">
+                        <div class="blog__item__pic set-bg" data-setbg="'../Assets/images/uploads/articles/@item.Image'"></div>
+                        <div class="blog__item__text">
+                            <h6><a href="/bai-viet/@item.Alias">@item.Name</a></h6>
+                            <ul>
+                                <li>Người tạo <span>@item.CreatedBy</span></li>
+                                <li>@item.CreatedDate</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="col-lg-12 text-center">
+                <a href="#" class="primary-btn load-btn">Xem thêm</a>
+            </div>
+        </div>
+    </div>
+</section>

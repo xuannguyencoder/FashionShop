@@ -1,0 +1,105 @@
+﻿@model FashionShop.Models.ViewModel.ShipViewModel
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    var payments = (List<FashionShop.Models.EF.Payment>)ViewBag.payments;
+    var Cart = (List<FashionShop.Models.CartItem>)ViewBag.Cart;
+}
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="/"><i class="fa fa-home"></i> Trang chủ</a>
+                    <span>Giỏ hàng</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        @if (TempData["Message"] != null)
+        {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-@TempData["Status"]" role="alert">
+                        @TempData["Message"]
+                    </div>
+                </div>
+            </div>
+        }
+        @using (Html.BeginForm("CheckOut", "Order", FormMethod.Post, new { @class = "checkout__form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-lg-7">
+                    <h5>Chi tiết thanh toán</h5>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="checkout__form__input">
+                                <p>Họ tên<span>*</span></p>
+                                @Html.TextBoxFor(m => m.Name)
+                                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Số điện thoại<span>*</span></p>
+                                @Html.TextBoxFor(m => m.Phone)
+                                @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Địa chỉ<span>*</span></p>
+                                @Html.TextBoxFor(m => m.Address)
+                                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Ghi chú đặt hàng<span>*</span></p>
+                                @Html.TextBoxFor(m => m.Note)
+                                @Html.ValidationMessageFor(m => m.Note, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="checkout__order">
+                        <h5>Đơn hàng của bạn</h5>
+                        <div class="checkout__order__product">
+                            <ul>
+                                <li>
+                                    <span class="top__text">Sản phẩm</span>
+                                    <span class="top__text__right">Tổng cộng</span>
+                                </li>
+                                @{ int number = 0;}
+                                @foreach (var item in Cart)
+                                {
+                                    number++;
+                            <li>@(number+".") @item.ProductDetail.Product.Name - @item.ProductDetail.Color.Name - @item.ProductDetail.Size.Code <span>@item.Total.ToString("N0") vnđ</span></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="checkout__order__total">
+                            <ul>
+                                <li>Tổng tiền <span>@(((decimal)ViewBag.CartTotal).ToString("N0")+ "vnđ")</span></li>
+                            </ul>
+                        </div>
+                        <div>
+                            @foreach (var item in payments)
+                            {
+                                <div class="form-check mb-3">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="payment_method" value="@item.ID">@item.Name
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <button type="submit" class="site-btn">Đặt hàng</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<!-- Checkout Section End -->

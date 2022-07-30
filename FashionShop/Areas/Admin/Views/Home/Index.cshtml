@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="stat-widget-two card-body">
+                    <div class="stat-content">
+                        <div class="stat-text">Danh thu trong ngày</div>
+                        <div class="stat-digit"><span id="revenueforday">0 VNĐ</span></div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="stat-widget-two card-body">
+                    <div class="stat-content">
+                        <div class="stat-text">Sản phẩm</div>
+                        <div class="stat-digit"><span id="productcount">0</span></div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-primary w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="stat-widget-two card-body">
+                    <div class="stat-content">
+                        <div class="stat-text">Bài viết</div>
+                        <div class="stat-digit"><span id="articlecount">0</span></div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="stat-widget-two card-body">
+                    <div class="stat-content">
+                        <div class="stat-text">Khách hàng</div>
+                        <div class="stat-digit"><span id="customercount">0</span></div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-danger w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- /# card -->
+        </div>
+        <!-- /# column -->
+    </div>
+    <div class="row">
+        <div class="col-xl-8 col-lg-8 col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Doanh thu trong tuần</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="barChart_1"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="m-t-10">
+                        <h4 class="card-title">Khách hàng phản hồi</h4>
+                        <h2 class="mt-3"><span id="feedbackcount">0</span></h2>
+                    </div>
+                    <div class="widget-card-circle mt-5 mb-5" id="info-circle-card">
+                        <i class="ti-control-shuffle pa"></i>
+                    </div>
+                    <ul class="widget-line-list m-b-15">
+                        <li class="border-right">
+                            <span id="reply">0%</span><br><span class="text-success">
+                                <i class="ti-hand-point-up"></i> Đã trả lời
+                            </span>
+                        </li>
+                        <li>
+                            <span id="noreply">0%</span><br><span class="text-danger">
+                                <i class="ti-hand-point-down"></i>Chưa trả lời
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-5">Slider padding</h4>
+                    <div class="padding-slider">
+                        <div id="slider-padding"></div>
+                        <span class="example-val" id="slider-padding-value-min"></span>
+                        <span class="example-val" id="slider-padding-value-max"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-5">Slider behaviour (Tap)</h4>
+                    <div class="slider-behaviour">
+                        <div id="tap" class="noUi-target noUi-ltr noUi-horizontal"><div class="noUi-base"><div class="noUi-connects"><div class="noUi-connect" style="transform: translate(49.7863%, 0px) scale(0.502137, 1);"></div></div><div class="noUi-origin" style="transform: translate(-50.2137%, 0px); z-index: 4;"><div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" role="slider" aria-orientation="horizontal" aria-valuemin="20.0" aria-valuemax="80.0" aria-valuenow="49.9" aria-valuetext="49.87"></div></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Assets/Admin/vendor/nouislider/nouislider.min.js"></script>
+    <script src="~/Assets/Admin/vendor/wnumb/wNumb.js"></script>
+
+    <script src="~/Assets/Admin/vendor/chart.js/Chart.bundle.min.js"></script>
+    <script src="~/Assets/js/chartjs.js"></script>
+    <script src="~/Assets/Admin/vendor/circle-progress/circle-progress.min.js"></script>
+
+    <script src="~/Assets/Admin/js/dashboard/dashboard-1.js"></script>
+
+    @*<script src="~/Assets/Admin/js/plugins-init/nouislider-init.js"></script>*@
+    <script>
+        var paddingSlider = document.getElementById('slider-padding');
+        var paddingMin = document.getElementById('slider-padding-value-min');
+        var paddingMax = document.getElementById('slider-padding-value-max');
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Admin/Home/GetValue',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: {
+                    ID: 1,
+                },
+                success: function (res) {
+                    noUiSlider.create(paddingSlider, {
+                        start: [20, 80],
+                        padding: [10, 15], // Or just 10
+                        connect: true,
+                        range: {
+                            'min': 0,
+                            'max': 100
+                        }
+                    });
+                }
+            });
+            test();
+        });
+        function test() {
+            paddingSlider.noUiSlider.on('update', function (values, handle) {
+                if (handle) {
+                    paddingMax.innerHTML = values[handle];
+                    $.ajax({
+                        url: '/Admin/Home/Change',
+                        type: 'POST',
+                        dataType: 'json',
+                        async: false,
+                        data: {
+                            ID: 1,
+                        },
+                        success: function (res) {
+
+                        }
+                    });
+
+                } else {
+                    paddingMin.innerHTML = values[handle];
+                }
+            });
+        }
+    </script>
+}
+
+@section Links{
+    <link rel="stylesheet" href="~/Assets/Admin/vendor/nouislider/nouislider.min.css">
+}

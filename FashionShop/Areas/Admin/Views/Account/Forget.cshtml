@@ -1,0 +1,25 @@
+﻿@model FashionShop.Models.ViewModel.ForgetViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AccountLayout.cshtml";
+}
+<div class="col-md-6">
+    <div class="authincation-content">
+        <div class="row no-gutters">
+            <div class="col-xl-12">
+                <div class="auth-form">
+                    <h4 class="text-center mb-4">Quên mật khẩu</h4>
+                    @using (Html.BeginForm("Forget", "Account", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken() //cho client
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" });
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Email)
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @autofocus = "autofocus", @placeholder = "Email" })
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Gửi Email</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

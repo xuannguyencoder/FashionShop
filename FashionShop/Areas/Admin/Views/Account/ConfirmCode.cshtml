@@ -1,0 +1,25 @@
+﻿@model FashionShop.Models.Common.UserCode
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AccountLayout.cshtml";
+}
+<div class="col-md-6">
+    <div class="authincation-content">
+        <div class="row no-gutters">
+            <div class="col-xl-12">
+                <div class="auth-form">
+                    <h4 class="text-center mb-4">Nhập mã xác thực</h4>
+                    @using (Html.BeginForm("ConfirmCode", "Account", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken() //cho client
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" });
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Code)
+                            @Html.TextBoxFor(m => m.Code, new { @class = "form-control", @autofocus = "autofocus" })
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Xác thực</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

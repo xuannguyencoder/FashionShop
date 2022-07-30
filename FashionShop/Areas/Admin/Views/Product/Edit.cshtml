@@ -1,0 +1,99 @@
+﻿@model FashionShop.Models.EF.Product
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
+}
+<span id="message" class="d-none">@TempData["Message"]</span>
+<span id="status" class="d-none">@TempData["Status"]</span>
+<div class="container-fluid">
+    @using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h3 style="color: #593bdb">Quản lý sản phẩm</h3>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Sản phẩm</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Chỉnh sửa</a></li>
+                    </ol>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <div>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Trở về</a>
+                </div>
+            </div>
+        </div>
+        <!-- row -->
+        <div class="row">
+            <div class="col-xl-8 col-lg-8 col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.Name)
+                                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.Price)
+                                    @Html.TextBoxFor(model => model.Price, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.PromotionPrice)
+                                    @Html.TextBoxFor(model => model.PromotionPrice, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.PromotionPrice, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.Description)
+                                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control summernote" })
+                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.Detail)
+                                    @Html.TextAreaFor(model => model.Detail, new { @class = "form-control summernote2" })
+                                    @Html.ValidationMessageFor(model => model.Detail, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.ProductCategoryID)
+                                    @Html.DropDownListFor(model => model.ProductCategoryID, (IEnumerable<SelectListItem>)ViewBag.ProductCateList, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProductCategoryID, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(model => model.Status)
+                                    @Html.DropDownListFor(model => model.Status, new List<SelectListItem>{
+                                            new SelectListItem() {Text = "Ẩn", Value="false"},
+                                            new SelectListItem() {Text = "Hiện", Value="true"}}, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script src="~/Assets/js/summernote.js"></script>
+    <script src="~/Assets/Admin/vendor/summernote/js/summernote.min.js"></script>
+}
+@section Links{
+    <link rel="stylesheet" href="~/Assets/Admin/vendor/toastr/css/toastr.min.css">
+    <link href="~/Assets/Admin/vendor/summernote/summernote.css" rel="stylesheet">
+}
