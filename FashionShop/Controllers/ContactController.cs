@@ -27,15 +27,28 @@ namespace FashionShop.Controllers
         [HttpPost]
         public ActionResult Feedback(Feedback feedback)
         {
-            FeedbackModel feedbackModel = new FeedbackModel();
-            long result = feedbackModel.Insert(feedback);
-            if (result > 0)
+            if (ModelState.IsValid)
             {
-                TempData["Message"] = "Gửi phản hồi thành công";
-                TempData["Status"] = "success";
-                return RedirectToRoute("lienhe");
+                FeedbackModel feedbackModel = new FeedbackModel();
+                long result = feedbackModel.Insert(feedback);
+                if (result > 0)
+                {
+                    TempData["Message"] = "Gửi phản hồi thành công";
+                    TempData["Status"] = "success";
+                    return RedirectToRoute("lienhe");
+                }
             }
-            return View(feedback);
+            ContactModel contactModel = new ContactModel();
+            var contact = contactModel.GetActive();
+            if (contact != null)
+            {
+                ViewBag.Contact = contact;
+            }
+            else
+            {
+                ViewBag.Contact = new Contact();
+            }
+            return View("Index", feedback );
         }
         [HttpPost]
         public JsonResult GetPoint()

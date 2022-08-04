@@ -1,6 +1,5 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.Common;
-using FashionShop.Models.EF;
 using FashionShop.Models.ViewModel;
 using System;
 using System.Collections.Generic;

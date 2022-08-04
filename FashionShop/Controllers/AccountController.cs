@@ -100,15 +100,15 @@ namespace FashionShop.Controllers
             }
             return View();
         }
-        public void SignIn(string ReturnUrl = "/", string type = "")
+        public void SignIn(string ReturnUrl = "/", string Type = "")
         {
             if (!Request.IsAuthenticated)
             {
-                if (type == "google")
+                if (Type == "google")
                 {
                     HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "Account/GoogleLoginCallback" }, "Google");
                 }
-                if (type == "microsoft")
+                if (Type == "microsoft")
                 {
                     HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "Account/GoogleLoginCallback" }, "Microsoft");
                 }

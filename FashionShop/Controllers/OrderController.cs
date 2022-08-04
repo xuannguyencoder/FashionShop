@@ -73,10 +73,6 @@ namespace FashionShop.Controllers
                                 Session["ShipViewModel"] = shipViewModel;
                                 Session["PaymentID"] = 2;
                                 return RedirectToAction("MomoPayment", "Payment");
-                            case 3:
-                                Session["PaymentID"] = 3;
-                                Session["ShipViewModel"] = shipViewModel;
-                                return RedirectToAction("PaypalPayment", "Payment");
                         }  
                     }
                     catch
