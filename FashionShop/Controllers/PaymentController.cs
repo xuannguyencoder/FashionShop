@@ -4,18 +4,15 @@ using FashionShop.Models.EF;
 using FashionShop.Models.ViewModel;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Controllers
 {
     public class PaymentController : Controller
     {
-        ShipModel shipModel = null;
-        OrderModel orderModel = null;
-        CartModel cartModel = null;
+        private ShipModel shipModel = null;
+        private OrderModel orderModel = null;
+        private CartModel cartModel = null;
 
         public ActionResult MomoPayment()
         {
@@ -74,14 +71,14 @@ namespace FashionShop.Controllers
             }
             catch
             {
-                return RedirectToAction("Checkout","Order");
+                return RedirectToAction("Checkout", "Order");
             }
-
         }
+
         public ActionResult ConfirmPaymentClient()
         {
             int paymentID = (int)Session["PaymentID"];
-            if (paymentID == 1 ||Request.QueryString["errorCode"].ToString() == "0")
+            if (paymentID == 1 || Request.QueryString["errorCode"].ToString() == "0")
             {
                 var shipViewModel = (ShipViewModel)Session["ShipViewModel"];
                 Ship ship = new Ship();
@@ -129,7 +126,6 @@ namespace FashionShop.Controllers
 
                 if (user.EmailConfirmed == true)
                 {
-
                     string body = System.IO.File.ReadAllText(Server.MapPath("~/Assets/template/order.html"));
                     body = body.Replace("{{OrderID}}", orderID.ToString());
                     body = body.Replace("{{CreateDate}}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));

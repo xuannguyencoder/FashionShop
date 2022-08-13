@@ -9,8 +9,9 @@ namespace FashionShop.Models
 {
     public class ProductReviewModel
     {
-        FashionShopEntities db = null;
-        HttpContext context = HttpContext.Current;
+        private FashionShopEntities db = null;
+        private HttpContext context = HttpContext.Current;
+
         public ProductReviewModel()
         {
             db = new FashionShopEntities();
@@ -20,10 +21,12 @@ namespace FashionShop.Models
         {
             return db.ProductReviews.ToList();
         }
+
         public List<ProductReview> GetByProductID(long? ID)
         {
             return db.ProductReviews.Where(x => x.ProductID == ID).OrderBy(x => x.CreatedDate).ToList();
         }
+
         public long Insert(ProductReview model)
         {
             try

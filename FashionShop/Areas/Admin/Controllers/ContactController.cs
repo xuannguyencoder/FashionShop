@@ -1,9 +1,5 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.EF;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Areas.Admin.Controllers
@@ -15,6 +11,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ContactModel contactModel = new ContactModel();
             return View(contactModel.GetActive());
         }
+
         public ActionResult Edit(int? ID)
         {
             ContactModel contactModel = new ContactModel();
@@ -29,6 +26,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return View(contact);
         }
+
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(Contact contact)
@@ -46,6 +44,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return View(contact);
         }
+
         [HttpPost]
         public JsonResult GetPoint()
         {

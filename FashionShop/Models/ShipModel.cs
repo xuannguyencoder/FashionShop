@@ -1,18 +1,16 @@
 ﻿using FashionShop.Models.EF;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace FashionShop.Models
 {
     public class ShipModel
     {
-        FashionShopEntities db = null;
+        private FashionShopEntities db = null;
+
         public ShipModel()
         {
             db = new FashionShopEntities();
         }
+
         public long Insert(Ship ship)
         {
             try
@@ -26,10 +24,12 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public Ship GetByID(long? ID)
         {
             return db.Ships.Find(ID);
         }
+
         public bool Update(Ship ship)
         {
             try
@@ -46,7 +46,6 @@ namespace FashionShop.Models
             {
                 return false;
             }
-
         }
     }
 }

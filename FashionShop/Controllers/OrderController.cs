@@ -1,20 +1,16 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.Common;
-using FashionShop.Models.EF;
 using FashionShop.Models.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Controllers
 {
     public class OrderController : Controller
     {
-        CustomerModel cusModel = new CustomerModel();
-        PaymentModel paymentModel = new PaymentModel();
-        CartModel cartModel = new CartModel();
+        private CustomerModel cusModel = new CustomerModel();
+        private PaymentModel paymentModel = new PaymentModel();
+        private CartModel cartModel = new CartModel();
+
         public ActionResult Checkout()
         {
             if (Session[Constant.CartSession] == null)
@@ -22,9 +18,9 @@ namespace FashionShop.Controllers
                 TempData["Message"] = "Thêm sản phẩm vào giỏ hàng trước khi thanh toán";
                 TempData["Status"] = "success";
                 return RedirectToRoute("giohang");
-            } 
+            }
             var cart = cartModel.ListAll();
-            if (cart.Count==0)
+            if (cart.Count == 0)
             {
                 TempData["Message"] = "Thêm sản phẩm vào giỏ hàng trước khi thanh toán";
                 TempData["Status"] = "success";
@@ -42,24 +38,24 @@ namespace FashionShop.Controllers
             ShipViewModel shipView;
             shipView = new ShipViewModel(customer.FirstName, customer.LastName, customer.Address, customer.Phone);
 
-
             ViewBag.Cart = cart;
             ViewBag.CartTotal = cartModel.getCartTotal();
             ViewBag.Payments = paymentModel.ListAll();
             return View(shipView);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Checkout(FormCollection form, ShipViewModel shipViewModel)
         {
             if (ModelState.IsValid)
             {
-                if (form["payment_method"]!=null)
+                if (form["payment_method"] != null)
                 {
                     try
                     {
                         int paymentID = int.Parse(form["payment_method"].ToString());
-                        if (paymentModel.GetByID(paymentID) ==null)
+                        if (paymentModel.GetByID(paymentID) == null)
                         {
                             return View(shipViewModel);
                         }
@@ -69,11 +65,12 @@ namespace FashionShop.Controllers
                                 Session["ShipViewModel"] = shipViewModel;
                                 Session["PaymentID"] = 1;
                                 return RedirectToAction("ConfirmPaymentClient", "Payment");
+
                             case 2:
                                 Session["ShipViewModel"] = shipViewModel;
                                 Session["PaymentID"] = 2;
                                 return RedirectToAction("MomoPayment", "Payment");
-                        }  
+                        }
                     }
                     catch
                     {

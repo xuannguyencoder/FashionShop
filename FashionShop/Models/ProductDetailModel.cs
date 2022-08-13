@@ -8,25 +8,30 @@ namespace FashionShop.Models
 {
     public class ProductDetailModel
     {
-        FashionShopEntities db = null;
-        HttpContext context = HttpContext.Current;
+        private FashionShopEntities db = null;
+        private HttpContext context = HttpContext.Current;
+
         public ProductDetailModel()
         {
             db = new FashionShopEntities();
         }
+
         public ProductDetail GetByID(long? ID)
         {
             return db.ProductDetails.Find(ID);
         }
+
         public ProductDetail GetByProperties(long? ProductID, int? SizeID, string ColorCode)
         {
             return db.ProductDetails.SingleOrDefault(
                 x => x.ProductID == ProductID && x.SizeID == SizeID && x.ColorCode == ColorCode);
         }
+
         public List<ProductDetail> GetByProductID(long? ProductID)
         {
             return db.ProductDetails.Where(x => x.ProductID == ProductID).ToList();
         }
+
         public long Insert(ProductDetail productDetail)
         {
             try
@@ -48,7 +53,7 @@ namespace FashionShop.Models
         {
             try
             {
-                var model = db.ProductDetails.Find(proDetail.ID); 
+                var model = db.ProductDetails.Find(proDetail.ID);
                 model.Quantity = proDetail.Quantity;
                 model.ModifiedDate = DateTime.Now;
 
@@ -60,6 +65,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool Delete(long? ProductID, int? SizeID, string ColorCode)
         {
             try
@@ -74,6 +80,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateQuantity(long ProductDetaiID, int quantity)
         {
             try

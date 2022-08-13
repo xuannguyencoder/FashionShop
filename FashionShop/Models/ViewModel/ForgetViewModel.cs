@@ -10,6 +10,8 @@ namespace FashionShop.Models.ViewModel
     {
         [Required(ErrorMessage = "Vui lòng nhập địa chỉ Email")]
         [Display(Name = "Email")]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage ="Địa chỉ Email không hợp lệ")]
         public string Email { get; set; }
     }
 }

@@ -2,17 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace FashionShop.Models
 {
     public class FeedbackModel
     {
-        FashionShopEntities db = null;
+        private FashionShopEntities db = null;
+
         public FeedbackModel()
         {
             db = new FashionShopEntities();
         }
+
         public long Insert(Feedback feedback)
         {
             try
@@ -28,14 +29,17 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public List<Feedback> ListAll()
         {
-            return db.Feedbacks.OrderByDescending(x=>x.CreateDate).ToList();
+            return db.Feedbacks.OrderByDescending(x => x.CreateDate).ToList();
         }
+
         public Feedback GetByID(long? ID)
         {
             return db.Feedbacks.Find(ID);
         }
+
         public bool UpdateStatus(long ID)
         {
             try
@@ -45,7 +49,7 @@ namespace FashionShop.Models
                 db.SaveChanges();
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

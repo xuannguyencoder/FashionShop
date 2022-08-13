@@ -1,46 +1,51 @@
 ﻿using FashionShop.Models.EF;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace FashionShop.Models
 {
     public class MenuTypeModel
     {
-        FashionShopEntities db = null;
+        private FashionShopEntities db = null;
+
         public MenuTypeModel()
         {
             db = new FashionShopEntities();
         }
+
         public MenuType GetByID(int? ID)
         {
             return db.MenuTypes.Find(ID);
         }
+
         public List<MenuType> ListAll()
         {
             return db.MenuTypes.ToList();
         }
+
         public List<MenuType> ListAllByPosition(int PositionID)
         {
             var menuTypes = db.MenuTypes.Where(x => x.PositionID == PositionID).ToList();
             return menuTypes;
         }
+
         public List<MenuType> ListOrderByDisplayOrder()
         {
-            return db.MenuTypes.OrderBy(x=>x.DisplayOrder).ToList();
+            return db.MenuTypes.OrderBy(x => x.DisplayOrder).ToList();
         }
+
         public MenuType FirstOrDefault()
         {
             return db.MenuTypes.FirstOrDefault();
         }
+
         public int Insert(MenuType menuType)
         {
             try
             {
                 var temp = db.MenuTypes.Where(x => x.PositionID == menuType.PositionID).ToList().LastOrDefault();
                 if (temp == null) //trường hợp danh mục rỗng
-                    menuType.DisplayOrder = 1; 
+                    menuType.DisplayOrder = 1;
                 else
                     menuType.DisplayOrder = temp.ID + 1;
                 db.MenuTypes.Add(menuType);
@@ -52,6 +57,7 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public bool Delete(int ID)
         {
             try
@@ -66,11 +72,12 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool Update(MenuType menuType)
         {
             try
             {
-                var model = db.MenuTypes.Find(menuType.ID); 
+                var model = db.MenuTypes.Find(menuType.ID);
                 model.Name = menuType.Name;
                 model.Status = menuType.Status;
                 db.SaveChanges();
@@ -85,6 +92,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateStatus(int? ID)
         {
             try
@@ -96,13 +104,13 @@ namespace FashionShop.Models
                     menuType.Status = true;
                 db.SaveChanges();
                 return true;
-
             }
             catch
             {
                 return false;
             }
         }
+
         private void UpdateDisLayOrder(int ptNew, int ptOul, MenuType menuTy, int positionID)
         {
             if (menuTy.PositionID == positionID) // xét trường hợp thay đổi vị trí trong cùng 1 danh mục
@@ -158,7 +166,7 @@ namespace FashionShop.Models
             {
                 var menuType = db.MenuTypes.Find(menuTy.ID);
                 var menuTypeByPT = db.MenuTypes.Where(x => x.PositionID == menuType.PositionID).ToList()
-                    .LastOrDefault(x=>x.PositionID == menuType.PositionID);
+                    .LastOrDefault(x => x.PositionID == menuType.PositionID);
                 if (menuTypeByPT == null) //trường hợp dữ liệu rỗng
                     menuType.DisplayOrder = 1;
                 else

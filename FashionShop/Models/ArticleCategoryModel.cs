@@ -10,28 +10,34 @@ namespace FashionShop.Models
 {
     public class ArticleCategoryModel
     {
-        FashionShopEntities db = null;
-        HttpContext context = HttpContext.Current;
+        private FashionShopEntities db = null;
+        private HttpContext context = HttpContext.Current;
+
         public ArticleCategoryModel()
         {
             db = new FashionShopEntities();
         }
+
         public Category GetByID(long? ID)
         {
             return db.Categories.Find(ID);
         }
+
         public int GetLevelByID(long? ID)
         {
             return db.Categories.Find(ID).Level;
         }
+
         public List<Category> ListAll()
         {
             return db.Categories.ToList();
         }
+
         public List<Category> ListOrderByDisplayOrder()
         {
             return db.Categories.OrderBy(x => x.DisplayOrder).ToList();
         }
+
         public List<SelectListItem> DDLArticleCate()
         {
             var articleCateList = new SelectList(new List<SelectListItem>()).ToList();
@@ -86,6 +92,7 @@ namespace FashionShop.Models
         {
             return db.Categories.OrderBy(x => x.Level).ToList();
         }
+
         public List<Category> ListAllByLevel(int Level)
         {
             return db.Categories.Where(x => x.Level == Level).ToList();
@@ -127,6 +134,7 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public bool CheckAlias(string alias)
         {
             if (alias != null)
@@ -139,6 +147,7 @@ namespace FashionShop.Models
             else
                 return false;
         }
+
         public string FixAlias(string alias)
         {
             bool flag = true;
@@ -154,6 +163,7 @@ namespace FashionShop.Models
                 alias += i;
             return alias;
         }
+
         public bool Update(Category articleCate)
         {
             try
@@ -204,6 +214,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateLevel(long cateID)
         {
             try
@@ -215,7 +226,6 @@ namespace FashionShop.Models
                 }
                 foreach (var item in db.Categories.Where(x => x.ParentID == cate.ID))
                 {
-
                     var cate2 = db.Menus.Find(item.ID);
                     cate2.Level = cate.Level + 1;
                     db.SaveChanges();
@@ -227,6 +237,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         private void UpdateDisLayOrder(int ptNew, int ptOul, Category cate)
         {
             var articleCates = new List<Category>();
@@ -271,6 +282,7 @@ namespace FashionShop.Models
                 db.SaveChanges();
             }
         }
+
         public bool Delete(long? ID)
         {
             try
@@ -285,6 +297,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateStatus(long? ID)
         {
             try

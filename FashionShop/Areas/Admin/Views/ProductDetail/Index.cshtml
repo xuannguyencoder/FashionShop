@@ -1,9 +1,9 @@
 ﻿@model List<FashionShop.Models.EF.ProductDetail>
-@using FashionShop.Models.ViewModel
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
-    var proImages = (List<ProductImageViewModel>)ViewBag.proImages;
+    var proImages = (List< FashionShop.Models.EF.ProductImage>)ViewBag.proImages;
 }
 <span id="message" class="d-none">@TempData["Message"]</span>
 <span id="status" class="d-none">@TempData["Status"]</span>

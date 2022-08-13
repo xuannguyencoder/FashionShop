@@ -1,9 +1,5 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.EF;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Controllers
@@ -24,6 +20,7 @@ namespace FashionShop.Controllers
             }
             return View();
         }
+
         [HttpPost]
         public ActionResult Feedback(Feedback feedback)
         {
@@ -48,8 +45,9 @@ namespace FashionShop.Controllers
             {
                 ViewBag.Contact = new Contact();
             }
-            return View("Index", feedback );
+            return View("Index", feedback);
         }
+
         [HttpPost]
         public JsonResult GetPoint()
         {
@@ -66,6 +64,5 @@ namespace FashionShop.Controllers
 
             return Json(new { pointX = contact.PointX, pointY = contact.PointY }, JsonRequestBehavior.AllowGet);
         }
-
     }
 }

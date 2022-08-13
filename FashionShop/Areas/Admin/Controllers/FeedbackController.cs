@@ -1,9 +1,5 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Areas.Admin.Controllers
@@ -15,12 +11,13 @@ namespace FashionShop.Areas.Admin.Controllers
             FeedbackModel feedbackModel = new FeedbackModel();
             return View(feedbackModel.ListAll());
         }
+
         [HttpPost]
         public JsonResult SendMail(long ID, string content)
         {
             FeedbackModel feedbackModel = new FeedbackModel();
             var fb = feedbackModel.GetByID(ID);
-            if (fb!=null)
+            if (fb != null)
             {
                 var result = MailHelper.SendMail("Trả lời phải hồi", content, fb.Email);
                 if (result)
@@ -33,8 +30,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             TempData["Message"] = "Gửi email thất bại";
             TempData["Status"] = "error";
-            return Json(new { status = false });
-
+            return Json(new { status = false, });
         }
     }
 }

@@ -10,28 +10,34 @@ namespace FashionShop.Models
 {
     public class ProductCategoryModel
     {
-        FashionShopEntities db = null;
-        HttpContext context = HttpContext.Current;
+        private FashionShopEntities db = null;
+        private HttpContext context = HttpContext.Current;
+
         public ProductCategoryModel()
         {
             db = new FashionShopEntities();
         }
+
         public ProductCategory GetByID(long? ID)
         {
             return db.ProductCategories.Find(ID);
         }
+
         public int GetLevelByID(long? ID)
         {
             return db.ProductCategories.Find(ID).Level;
         }
+
         public List<ProductCategory> ListAll()
         {
             return db.ProductCategories.ToList();
         }
+
         public List<ProductCategory> ListOrderByDisplayOrder()
         {
             return db.ProductCategories.OrderBy(x => x.DisplayOrder).ToList();
         }
+
         public List<SelectListItem> DDLProductCate()
         {
             var productCateList = new SelectList(new List<SelectListItem>()).ToList();
@@ -50,7 +56,7 @@ namespace FashionShop.Models
                 {
                     var cate = db.ProductCategories.Find(item.ParentID);
                     var index = productCateList.FindIndex(x => x.Value == cate.ID.ToString()) + 1;
-                    productCateList.Insert(index, new SelectListItem { Text = name+item.Name , Value = item.ID.ToString() });
+                    productCateList.Insert(index, new SelectListItem { Text = name + item.Name, Value = item.ID.ToString() });
                 }
             }
             return productCateList;
@@ -67,7 +73,7 @@ namespace FashionShop.Models
                     name += " - ";
                 }
                 var item2 = item;
-                item2.Name = name +item.Name;
+                item2.Name = name + item.Name;
                 if (item.Level == 1)
                 {
                     productCates.Insert(0, item2);
@@ -84,8 +90,9 @@ namespace FashionShop.Models
 
         public List<ProductCategory> ListAllOrderByLevel()
         {
-            return db.ProductCategories.OrderBy(x=>x.Level).ToList();
+            return db.ProductCategories.OrderBy(x => x.Level).ToList();
         }
+
         public List<ProductCategory> ListAllByLevel(int Level)
         {
             return db.ProductCategories.Where(x => x.Level == Level).ToList();
@@ -127,6 +134,7 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public bool CheckAlias(string alias)
         {
             if (alias != null)
@@ -139,6 +147,7 @@ namespace FashionShop.Models
             else
                 return false;
         }
+
         public string FixAlias(string alias)
         {
             bool flag = true;
@@ -154,6 +163,7 @@ namespace FashionShop.Models
                 alias += i;
             return alias;
         }
+
         public bool Update(ProductCategory productCate)
         {
             try
@@ -203,6 +213,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateLevel(long cateID)
         {
             try
@@ -214,7 +225,6 @@ namespace FashionShop.Models
                 }
                 foreach (var item in db.ProductCategories.Where(x => x.ParentID == cate.ID))
                 {
-
                     var cate2 = db.Menus.Find(item.ID);
                     cate2.Level = cate.Level + 1;
                     db.SaveChanges();
@@ -226,6 +236,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         private void UpdateDisLayOrder(int ptNew, int ptOul, ProductCategory cate)
         {
             var productCates = new List<ProductCategory>();
@@ -270,6 +281,7 @@ namespace FashionShop.Models
                 db.SaveChanges();
             }
         }
+
         public bool Delete(long? ID)
         {
             try
@@ -284,6 +296,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateStatus(long? ID)
         {
             try

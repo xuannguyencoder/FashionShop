@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace FashionShop.Models.Common
 {
@@ -9,7 +7,11 @@ namespace FashionShop.Models.Common
     public class UserCode
     {
         public long UserID { get; set; }
+
+        [Display(Name = "Mã xác thực")]
+        [Required(ErrorMessage = "Vui lòng nhập mã xác thực")]
         public string Code { get; set; }
+
         public string Email { get; set; }
         public bool Status { get; set; }
     }

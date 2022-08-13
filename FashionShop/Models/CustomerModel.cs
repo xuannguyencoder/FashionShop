@@ -3,19 +3,21 @@ using FashionShop.Models.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace FashionShop.Models
 {
     public class CustomerModel
     {
-        FashionShopEntities db = null;
+        private FashionShopEntities db = null;
+
         public CustomerModel()
         {
             db = new FashionShopEntities();
         }
+
         public int Login(string Username, string Password)
         {
+            string password = ConvertData.MD5Hash(Password);
             var result = db.Customers.SingleOrDefault(x => x.Username == Username);
             if (result == null)
             {
@@ -27,7 +29,7 @@ namespace FashionShop.Models
                 {
                     if (result.Status == false)
                         return -1; // tài khoản bị khóa
-                    else if (result.Password == Password)
+                    else if (result.Password == password)
                         return 1; // đăng nhập thành công
                     else
                         return -2; // sai mật khẩu
@@ -36,28 +38,33 @@ namespace FashionShop.Models
                     return 0;
             }
         }
+
         public List<Customer> ListAll()
         {
             return db.Customers.ToList();
         }
+
         public Customer GetByUsername(string Username)
         {
             return db.Customers.SingleOrDefault(x => x.Username == Username);
         }
+
         public Customer GetByID(long? ID)
         {
             return db.Customers.Find(ID);
         }
+
         public Customer GetByEmail(string Email)
         {
-            return db.Customers.SingleOrDefault(x => x.Email == Email);
+            return db.Customers.FirstOrDefault(x => x.Email == Email);
         }
+
         public long Insert(Customer customer)
         {
             try
             {
                 customer.CreatedDate = DateTime.Now;
-                customer.Password = ConvertData.Encryptor(customer.Password);
+                customer.Password = ConvertData.MD5Hash(customer.Password);
                 customer.EmailConfirmed = false;
                 customer.Status = true;
                 customer.Type = "Shop";
@@ -70,13 +77,14 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public long InsertAccountGoogle(Customer customer)
         {
             try
             {
                 customer.CreatedDate = DateTime.Now;
                 customer.Type = "Google";
-                string password =  System.Web.Security.Membership.GeneratePassword(32,0);
+                string password = System.Web.Security.Membership.GeneratePassword(32, 0);
                 customer.Password = password;
                 customer.Status = true;
                 customer.EmailConfirmed = true;
@@ -89,14 +97,16 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public bool CheckUsername(string Username)
         {
             var result = db.Customers.SingleOrDefault(x => x.Username == Username);
-            if (result !=null)
+            if (result != null)
                 return true;
             else
                 return false;
         }
+
         public bool CheckUsername(long ID, string Username) //update user
         {
             var result = db.Customers.SingleOrDefault(x => x.Username == Username);
@@ -105,12 +115,13 @@ namespace FashionShop.Models
             else
                 return false;
         }
+
         public bool UpdatePassword(Customer customer)
         {
             try
             {
                 var user = db.Customers.Find(customer.ID);
-                user.Password = ConvertData.Encryptor(customer.Password);
+                user.Password = ConvertData.MD5Hash(customer.Password);
                 db.SaveChanges();
                 return true;
             }
@@ -119,6 +130,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool Update(Customer customer)
         {
             try
@@ -140,6 +152,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateMyAccout(Customer user)
         {
             try
@@ -162,6 +175,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateStatus(long? ID)
         {
             try
@@ -179,6 +193,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool Delete(long? ID)
         {
             try
@@ -193,6 +208,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateEmailConfirm(long ID)
         {
             try

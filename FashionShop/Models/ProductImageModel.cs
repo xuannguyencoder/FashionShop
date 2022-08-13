@@ -1,18 +1,18 @@
 ﻿using FashionShop.Models.EF;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace FashionShop.Models
 {
     public class ProductImageModel
     {
-        FashionShopEntities db = null;
+        private FashionShopEntities db = null;
+
         public ProductImageModel()
         {
             db = new FashionShopEntities();
         }
+
         public long Insert(ProductImage proImage)
         {
             try
@@ -31,10 +31,12 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public List<ProductImage> ListAll()
         {
             return db.ProductImages.ToList();
         }
+
         public List<ProductImage> ListByProductID(long? ProductID)
         {
             return db.ProductImages.Where(x => x.ProductID == ProductID).ToList();

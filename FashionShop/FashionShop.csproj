@@ -234,18 +234,14 @@
     <Compile Include="Models\ShipModel.cs" />
     <Compile Include="Models\SizeModel.cs" />
     <Compile Include="Models\SlideModel.cs" />
-    <Compile Include="Models\ViewModel\ColorViewModel.cs" />
     <Compile Include="Models\ViewModel\EmailViewModel.cs" />
     <Compile Include="Models\ViewModel\ForgetViewModel.cs" />
     <Compile Include="Models\ViewModel\GoogleLoginViewModel.cs" />
     <Compile Include="Models\ViewModel\LoginViewModel.cs" />
     <Compile Include="Models\ViewModel\NewpasswordViewModel.cs" />
     <Compile Include="Models\ViewModel\PaymentViewModel.cs" />
-    <Compile Include="Models\ViewModel\ProductImageViewModel.cs" />
-    <Compile Include="Models\ViewModel\ProductViewModel.cs" />
     <Compile Include="Models\ViewModel\RegisterViewModel.cs" />
     <Compile Include="Models\ViewModel\ShipViewModel.cs" />
-    <Compile Include="Models\ViewModel\SizeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -347,6 +343,12 @@
     <Content Include="Assets\images\uploads\summerNote\221511960_Group-788-%281%29.jpg" />
     <Content Include="Assets\images\uploads\summerNote\222918207_ao-khoac-nam-aristino-AJK009W1-02x900x900x4.jpg" />
     <Content Include="Assets\images\uploads\summerNote\223208020_ao-khoac-nam-aristino-AJK009W1-02x900x900x4.jpg" />
+    <Content Include="Assets\js\cartController.js" />
+    <Content Include="Assets\js\chartjs.js" />
+    <Content Include="Assets\js\contactController.js" />
+    <Content Include="Assets\js\dbcontext.js" />
+    <Content Include="Assets\js\summernote.js" />
+    <Content Include="Assets\js\toastr.js" />
     <Content Include="Assets\template\js\cartController.js" />
     <Content Include="Assets\template\js\chartjs.js" />
     <Content Include="Assets\template\js\contactController.js" />
@@ -4569,6 +4571,10 @@
     <Content Include="Views\Home\SearchProduct.cshtml" />
     <None Include="Properties\PublishProfiles\FTPProfile1.pubxml" />
     <None Include="Properties\PublishProfiles\FTPProfile2.pubxml" />
+    <None Include="Properties\PublishProfiles\FTPProfile3.pubxml" />
+    <Content Include="Views\Account\Forget.cshtml" />
+    <Content Include="Views\Account\ConfirmCode.cshtml" />
+    <Content Include="Views\Account\NewPassword.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

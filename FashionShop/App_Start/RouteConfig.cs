@@ -47,6 +47,18 @@ namespace FashionShop
              );
             //AccountController
             routes.MapRoute(
+                 name: "maxacthuc",
+                 url: "ma-xac-thuc",
+                 defaults: new { controller = "Account", action = "ConfirmCode" },
+                 namespaces: new[] { "FashionShop.Controllers" }
+             );
+            routes.MapRoute(
+                 name: "quenmatkhau",
+                 url: "quen-mat-khau",
+                 defaults: new { controller = "Account", action = "Forget" },
+                 namespaces: new[] { "FashionShop.Controllers" }
+             );
+            routes.MapRoute(
                  name: "dangnhap",
                  url: "dang-nhap",
                  defaults: new { controller = "Account", action = "Login" },

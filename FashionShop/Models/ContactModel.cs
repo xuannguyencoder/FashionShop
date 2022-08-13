@@ -1,26 +1,27 @@
 ﻿using FashionShop.Models.EF;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace FashionShop.Models
 {
     public class ContactModel
     {
-        FashionShopEntities db = null;
+        private FashionShopEntities db = null;
+
         public ContactModel()
         {
             db = new FashionShopEntities();
         }
+
         public Contact GetByID(int? ID)
         {
             return db.Contacts.Find(ID);
         }
+
         public Contact GetActive()
         {
-            return db.Contacts.FirstOrDefault(x=>x.Status == true);
+            return db.Contacts.FirstOrDefault(x => x.Status == true);
         }
+
         public bool Update(Contact contact)
         {
             try
@@ -37,6 +38,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdatePoint(int ID, string pointX, string pointY)
         {
             try
@@ -51,7 +53,6 @@ namespace FashionShop.Models
             {
                 return false;
             }
-
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace FashionShop.Models.Common
+﻿namespace FashionShop.Models.Common
 {
     public class Constant
     {

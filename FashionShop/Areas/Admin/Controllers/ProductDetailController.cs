@@ -1,6 +1,5 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.EF;
-using FashionShop.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,10 +12,12 @@ namespace FashionShop.Areas.Admin.Controllers
     public class ProductDetailController : BaseController
     {
         // GET: Admin/ProductDetail
-        ProductModel productModel = new ProductModel();
-        ProductDetailModel proDetailModel = new ProductDetailModel();
-        SizeModel sizeModel = new SizeModel();
-        ColorModel colorModel = new ColorModel();
+        private ProductModel productModel = new ProductModel();
+
+        private ProductDetailModel proDetailModel = new ProductDetailModel();
+        private SizeModel sizeModel = new SizeModel();
+        private ColorModel colorModel = new ColorModel();
+
         public ActionResult Index(long? ID)
         {
             if (ID == null)
@@ -29,16 +30,13 @@ namespace FashionShop.Areas.Admin.Controllers
                 return View("_Error404");
             }
             ProductImageModel proImageModel = new ProductImageModel();
-            var proImagesView = new List<ProductImageViewModel>();
-            foreach(var item in proImageModel.ListByProductID(ID))
-            {
-                proImagesView.Add(new ProductImageViewModel(item.ProductID, item.ColorCode, item.Image, item.DisplayOrder));
-            }
-            ViewBag.proImages = proImagesView;
+
+            ViewBag.proImages = proImageModel.ListByProductID(ID);
             ViewBag.ProductID = product.ID;
             var productDetails = proDetailModel.GetByProductID(ID);
             return View(productDetails);
         }
+
         public ActionResult Create(long? ID)
         {
             if (ID == null)
@@ -54,11 +52,11 @@ namespace FashionShop.Areas.Admin.Controllers
             var SizeList = sizeModel.ListAll();
             ViewBag.SizeList = new SelectList(SizeList, "ID", "Code");
             ViewBag.ColorList = DDLColor();
-            //Show info product
-            ProductViewModel pro = new ProductViewModel(product.ID,product.Name,product.ProductCategory.Name);
-            ViewBag.product = pro;
+
+            ViewBag.product = product;
             return View();
         }
+
         public ActionResult Edit(long? ID)
         {
             if (ID == null)
@@ -75,10 +73,10 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.SizeList = new SelectList(SizeList, "ID", "Code");
             ViewBag.ColorList = DDLColor();
             //Show info product
-            ProductViewModel pro = new ProductViewModel(proDetail.ProductID, proDetail.Product.Name, proDetail.Product.ProductCategory.Name);
-            ViewBag.product = pro;
+
             return View(proDetail);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ProductDetail productDetail)
@@ -120,16 +118,12 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             ViewBag.SizeList = new SelectList(sizeModel.ListAll(), "ID", "Code");
             ViewBag.ColorList = DDLColor();
-
-            var product = productModel.GetByID(productDetail.ProductID);
-            //Show info product
-            ProductViewModel pro = new ProductViewModel(product.ID, product.Name, product.ProductCategory.Name);
-            ViewBag.product = pro;
             return View(productDetail);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(FormCollection form , [Bind(Include = "Quantity,ProductID, SizeID, ColorCode")] ProductDetail productDetail)
+        public ActionResult Create(FormCollection form, [Bind(Include = "Quantity,ProductID, SizeID, ColorCode")] ProductDetail productDetail)
         {
             if (ModelState.IsValid)
             {
@@ -138,7 +132,7 @@ namespace FashionShop.Areas.Admin.Controllers
                 for (int i = 0; i < files.Count; i++)
                 {
                     HttpPostedFileBase file = files[i];
-                    if (file.FileName!="")
+                    if (file.FileName != "")
                     {
                         string extension = Path.GetExtension(file.FileName);
                         if (!CheckExtension(extension))
@@ -152,7 +146,6 @@ namespace FashionShop.Areas.Admin.Controllers
                             ModelState.AddModelError("Image", "Kích thước ảnh " + file.FileName + " lớn hơn 2MB");
                         }
                     }
-                    
                 }
                 if (flag)
                 {
@@ -160,7 +153,7 @@ namespace FashionShop.Areas.Admin.Controllers
                     if (proDetail == null)
                     {
                         long proDetailID = proDetailModel.Insert(productDetail);
-                        if (proDetailID>0)
+                        if (proDetailID > 0)
                         {
                             InsertImage(files, productDetail.ProductID, productDetail.ColorCode);
                             TempData["Message"] = "Thêm chi tiết sản phẩm thành công";
@@ -186,27 +179,27 @@ namespace FashionShop.Areas.Admin.Controllers
                                 return RedirectToAction("Create", new { ID = productDetail.ProductID });
                         }
                     }
-                }      
+                }
             }
             ViewBag.SizeList = new SelectList(sizeModel.ListAll(), "ID", "Code");
             ViewBag.ColorList = DDLColor();
 
             var product = productModel.GetByID(productDetail.ProductID);
-            //Show info product
-            ProductViewModel pro = new ProductViewModel(product.ID, product.Name, product.ProductCategory.Name);
-            ViewBag.product = pro;
+            ViewBag.product = product;
             return View(productDetail);
         }
+
         private List<SelectListItem> DDLColor()
         {
             var ColorList = from h in colorModel.ListAll()
-                select new SelectListItem
-                {
-                    Value = h.Code.ToString(),
-                    Text = h.Code + " - " + h.Name
-                };
+                            select new SelectListItem
+                            {
+                                Value = h.Code.ToString(),
+                                Text = h.Code + " - " + h.Name
+                            };
             return new SelectList(ColorList, "Value", "Text").ToList();
         }
+
         private void InsertImage(HttpFileCollectionBase files, long productID, string colorCode)
         {
             ProductImageModel proImageModel = new ProductImageModel();
@@ -216,7 +209,7 @@ namespace FashionShop.Areas.Admin.Controllers
             for (int i = 0; i < files.Count; i++)
             {
                 HttpPostedFileBase file = files[i];
-                if (file.FileName!="")
+                if (file.FileName != "")
                 {
                     string filename = Path.GetFileName(file.FileName);
                     string _filename = DateTime.Now.ToString("yymmssfff") + "_" + filename;
@@ -230,6 +223,7 @@ namespace FashionShop.Areas.Admin.Controllers
                 }
             }
         }
+
         public bool CheckExtension(string extension)
         {
             if (extension.ToLower() == ".jpg" || extension.ToLower() == ".jpeg" || extension.ToLower() == ".png")
