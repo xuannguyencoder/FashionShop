@@ -13,7 +13,7 @@ namespace FashionShop.Controllers
         {
             ProductModel productModel = new ProductModel();
             var products = productModel.ListAll().Where(
-                x => x.Status == true && x.ProductCategory.Status == true && x.CreatedDate >= DateTime.Today.AddDays(-10));
+                x => x.Status == true && x.ProductCategory.Status == true && x.CreatedDate >= DateTime.Today.AddDays(-20));
             ProductImageModel proImageModel = new ProductImageModel();
 
             MenuTypeModel menuTypeModel = new MenuTypeModel();

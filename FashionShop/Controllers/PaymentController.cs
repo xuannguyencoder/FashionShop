@@ -22,7 +22,7 @@ namespace FashionShop.Controllers
             string accessKey = "iPXneGmrJH0G8FOP";
             string serectkey = "sFcbSGRSJjwGxwhhcEktCHWYUuTuPNDB";
             string orderInfo = "Thanh toán bằng ví điện tử MoMo";
-            string returnUrl = "http://xuannguyen-001-site1.ftempurl.com/ConfirmPaymentClient";
+            string returnUrl = "https://localhost:44317/ConfirmPaymentClient";
             string notifyurl = "http://ba1adf48beba.ngrok.io/Home/SavePayment"; //lưu ý: notifyurl không được sử dụng localhost, có thể sử dụng ngrok để public localhost trong quá trình test
             cartModel = new CartModel();
             string amount = cartModel.getCartTotal().ToString();
