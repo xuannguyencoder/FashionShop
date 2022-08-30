@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using OpenPop.Pop3;
-using OpenPop.Mime;
-
-using System.Web.Mvc;
+﻿using FashionShop.Models.Common;
 using FashionShop.Models.ViewModel;
-using FashionShop.Models.Common;
+using OpenPop.Mime;
+using OpenPop.Pop3;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Web.Mvc;
+
 namespace FashionShop.Areas.Admin.Controllers
 {
     public class EmailController : BaseController
     {
         // GET: Admin/Email
-        Pop3Client pop3Client = new Pop3Client();
+        private Pop3Client pop3Client = new Pop3Client();
+
         public ActionResult Index()
         {
             SetupPop3Client();
@@ -36,12 +34,14 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.CountMess = count;
             return View(emails);
         }
+
         public ActionResult Compose()
         {
             SetupPop3Client();
             ViewBag.CountMess = pop3Client.GetMessageCount();
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Compose(EmailViewModel email)
@@ -60,6 +60,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.CountMess = pop3Client.GetMessageCount();
             return View(email);
         }
+
         public ActionResult ReadEmail(string MessID)
         {
             SetupPop3Client();
@@ -116,12 +117,14 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return View(email);
         }
+
         [ChildActionOnly]
         public ActionResult EmailLeftBox(int countMess = 0)
         {
             ViewBag.countMess = countMess;
             return PartialView();
         }
+
         private void SetupPop3Client()
         {
             pop3Client.Connect("pop.gmail.com", 995, true);
@@ -131,6 +134,5 @@ namespace FashionShop.Areas.Admin.Controllers
                 AuthenticationMethod.UsernameAndPassword
             );
         }
-
     }
 }

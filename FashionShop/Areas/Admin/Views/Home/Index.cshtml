@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
 }
@@ -97,94 +96,14 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-5">Slider padding</h4>
-                    <div class="padding-slider">
-                        <div id="slider-padding"></div>
-                        <span class="example-val" id="slider-padding-value-min"></span>
-                        <span class="example-val" id="slider-padding-value-max"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-5">Slider behaviour (Tap)</h4>
-                    <div class="slider-behaviour">
-                        <div id="tap" class="noUi-target noUi-ltr noUi-horizontal"><div class="noUi-base"><div class="noUi-connects"><div class="noUi-connect" style="transform: translate(49.7863%, 0px) scale(0.502137, 1);"></div></div><div class="noUi-origin" style="transform: translate(-50.2137%, 0px); z-index: 4;"><div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" role="slider" aria-orientation="horizontal" aria-valuemin="20.0" aria-valuemax="80.0" aria-valuenow="49.9" aria-valuetext="49.87"></div></div></div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </div>
 
 @section Scripts{
-    <script src="~/Assets/Admin/vendor/nouislider/nouislider.min.js"></script>
-    <script src="~/Assets/Admin/vendor/wnumb/wNumb.js"></script>
-
     <script src="~/Assets/Admin/vendor/chart.js/Chart.bundle.min.js"></script>
     <script src="~/Assets/js/chartjs.js"></script>
     <script src="~/Assets/Admin/vendor/circle-progress/circle-progress.min.js"></script>
-
-    <script src="~/Assets/Admin/js/dashboard/dashboard-1.js"></script>
-
-    @*<script src="~/Assets/Admin/js/plugins-init/nouislider-init.js"></script>*@
-    <script>
-        var paddingSlider = document.getElementById('slider-padding');
-        var paddingMin = document.getElementById('slider-padding-value-min');
-        var paddingMax = document.getElementById('slider-padding-value-max');
-
-        $(document).ready(function () {
-            $.ajax({
-                url: '/Admin/Home/GetValue',
-                type: 'POST',
-                dataType: 'json',
-                async: false,
-                data: {
-                    ID: 1,
-                },
-                success: function (res) {
-                    noUiSlider.create(paddingSlider, {
-                        start: [20, 80],
-                        padding: [10, 15], // Or just 10
-                        connect: true,
-                        range: {
-                            'min': 0,
-                            'max': 100
-                        }
-                    });
-                }
-            });
-            test();
-        });
-        function test() {
-            paddingSlider.noUiSlider.on('update', function (values, handle) {
-                if (handle) {
-                    paddingMax.innerHTML = values[handle];
-                    $.ajax({
-                        url: '/Admin/Home/Change',
-                        type: 'POST',
-                        dataType: 'json',
-                        async: false,
-                        data: {
-                            ID: 1,
-                        },
-                        success: function (res) {
-
-                        }
-                    });
-
-                } else {
-                    paddingMin.innerHTML = values[handle];
-                }
-            });
-        }
-    </script>
+    <script src="~/Assets/Admin/js/dashboard/dashboard-1.js"></script> 
 }
 
 @section Links{

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net;
 using System.Text;
-using System.Web;
 
 namespace FashionShop.Models.Common
 {
@@ -13,9 +9,9 @@ namespace FashionShop.Models.Common
         public PaymentRequest()
         {
         }
+
         public static string sendPaymentRequest(string endpoint, string postJsonString)
         {
-
             try
             {
                 HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(endpoint);
@@ -41,7 +37,6 @@ namespace FashionShop.Models.Common
 
                 using (var reader = new StreamReader(response.GetResponseStream()))
                 {
-
                     string temp = null;
                     while ((temp = reader.ReadLine()) != null)
                     {
@@ -49,11 +44,9 @@ namespace FashionShop.Models.Common
                     }
                 }
 
-
                 //todo parse it
                 return jsonresponse;
                 //return new MomoResponse(mtid, jsonresponse);
-
             }
             catch (WebException e)
             {

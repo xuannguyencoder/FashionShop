@@ -1,21 +1,20 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.EF;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Areas.Admin.Controllers
 {
     public class ProductCategoryController : BaseController
     {
-        ProductCategoryModel productCateModel = new ProductCategoryModel();
+        private ProductCategoryModel productCateModel = new ProductCategoryModel();
+
         public ActionResult Index()
         {
             var model = productCateModel.ListAllByFormat();
             return View(model);
         }
+
         public ActionResult Create()
         {
             var cateList = productCateModel.DDLProductCate();
@@ -23,11 +22,11 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.ProductCateList = cateList;
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(FormCollection form, ProductCategory productCate)
         {
-
             if (ModelState.IsValid)
             {
                 var result = productCateModel.Insert(productCate);
@@ -40,13 +39,13 @@ namespace FashionShop.Areas.Admin.Controllers
                     else
                         return RedirectToAction("Create");
                 }
-                
             }
             var cateList = productCateModel.DDLProductCate();
             cateList.Insert(0, (new SelectListItem { Text = "Đây là mục menu chính", Value = "0" }));
             ViewBag.ProductCateList = cateList;
             return View(productCate);
         }
+
         public ActionResult Edit(long? ID)
         {
             if (ID == null)
@@ -70,6 +69,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.MenuDisplayOrderList = cates;
             return View(productCate);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ProductCategory productCate)
@@ -98,7 +98,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.MenuDisplayOrderList = cates;
             return View(productCate);
         }
-        
+
         public ActionResult Delete(long? ID)
         {
             if (ID == null)
@@ -123,6 +123,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return RedirectToAction("Index");
         }
+
         public ActionResult UpdateStatus(long? ID)
         {
             if (ID == null)

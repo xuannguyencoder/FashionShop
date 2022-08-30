@@ -1,8 +1,5 @@
 ﻿using FashionShop.Models.EF;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace FashionShop.Models
 {
@@ -10,8 +7,11 @@ namespace FashionShop.Models
     {
         public ProductDetail ProductDetail { get; set; }
         public int Quantity { get; set; }
-        public decimal Price { 
-            get {
+
+        public decimal Price
+        {
+            get
+            {
                 if (ProductDetail.Product.PromotionPrice > 0)
                 {
                     return ProductDetail.Product.PromotionPrice.GetValueOrDefault(0);
@@ -22,6 +22,7 @@ namespace FashionShop.Models
                 }
             }
         }
+
         public decimal Total
         {
             get
@@ -29,14 +30,15 @@ namespace FashionShop.Models
                 return Price * Quantity;
             }
         }
+
         public string ProductImage
         {
             get
             {
                 string image = "";
-                var productImage = ProductDetail.Product.ProductImages.OrderBy(x=>x.DisplayOrder)
-                    .FirstOrDefault(x=> x.ProductID == ProductDetail.ProductID & x.ColorCode == ProductDetail.ColorCode);
-                if (productImage!=null)
+                var productImage = ProductDetail.Product.ProductImages.OrderBy(x => x.DisplayOrder)
+                    .FirstOrDefault(x => x.ProductID == ProductDetail.ProductID & x.ColorCode == ProductDetail.ColorCode);
+                if (productImage != null)
                 {
                     image = productImage.Image;
                 }

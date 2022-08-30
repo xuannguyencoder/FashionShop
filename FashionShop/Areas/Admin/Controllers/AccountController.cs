@@ -1,11 +1,7 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.Common;
-using FashionShop.Models.EF;
 using FashionShop.Models.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Areas.Admin.Controllers
@@ -16,13 +12,14 @@ namespace FashionShop.Areas.Admin.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Login(LoginViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 AdminModel adminModel = new AdminModel();
-                var result = adminModel.Login(viewModel.Username,viewModel.Password);
+                var result = adminModel.Login(viewModel.Username, viewModel.Password);
                 if (result == 1)
                 {
                     var admin = adminModel.GetByUsername(viewModel.Username);
@@ -51,10 +48,12 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return View();
         }
+
         public ActionResult Forget()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Forget(ForgetViewModel model)
@@ -91,6 +90,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return View();
         }
+
         public ActionResult ConfirmCode()
         {
             var model = (UserCode)Session["CodeSession"];
@@ -100,6 +100,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ConfirmCode(UserCode userCode)
@@ -120,6 +121,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return View();
         }
+
         public ActionResult NewPassword()
         {
             var userCodeSess = (UserCode)Session["CodeSession"];
@@ -133,6 +135,7 @@ namespace FashionShop.Areas.Admin.Controllers
             model.ID = user.ID;
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult NewPassword(NewPasswordViewModel model)
@@ -153,6 +156,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return View();
         }
+
         public ActionResult Logout()
         {
             Session.Remove(Constant.ADMIN_SESSION);

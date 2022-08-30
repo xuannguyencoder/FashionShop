@@ -3,17 +3,18 @@ using FashionShop.Models.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace FashionShop.Models
 {
     public class AdminModel
-{
-        FashionShopEntities db = null;
+    {
+        private FashionShopEntities db = null;
+
         public AdminModel()
         {
             db = new FashionShopEntities();
         }
+
         public int Login(string Username, string Password)
         {
             Password = ConvertData.Encryptor(Password);
@@ -24,7 +25,6 @@ namespace FashionShop.Models
             }
             else
             {
-
                 if (result.Status == false)
                     return -1; // tài khoản bị khóa
                 else if (result.Password == Password)
@@ -33,22 +33,27 @@ namespace FashionShop.Models
                     return -2; // sai mật khẩu
             }
         }
+
         public List<Admin> ListAll()
         {
             return db.Admins.ToList();
         }
+
         public Admin GetByUsername(string Username)
         {
             return db.Admins.SingleOrDefault(x => x.Username == Username);
         }
+
         public Admin GetByID(long? ID)
         {
             return db.Admins.Find(ID);
         }
+
         public Admin GetByEmail(string Email)
         {
             return db.Admins.SingleOrDefault(x => x.Email == Email);
         }
+
         public long Insert(Admin admin)
         {
             try
@@ -66,6 +71,7 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public long InsertAccountGoogle(Admin admin)
         {
             try
@@ -83,6 +89,7 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public bool CheckUsername(string Username)
         {
             var result = db.Admins.Count(x => x.Username == Username);
@@ -91,6 +98,7 @@ namespace FashionShop.Models
             else
                 return false;
         }
+
         public bool CheckUserNameByID(long ID, string Username) //update user
         {
             var result = db.Admins.SingleOrDefault(x => x.Username == Username);
@@ -99,6 +107,7 @@ namespace FashionShop.Models
             else
                 return false;
         }
+
         public bool UpdatePassword(Admin model)
         {
             try
@@ -113,6 +122,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool Update(Customer customer)
         {
             try
@@ -133,6 +143,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateMyAccout(Customer user)
         {
             try
@@ -155,6 +166,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateStatus(long? ID)
         {
             try
@@ -172,6 +184,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool Delete(long? ID)
         {
             try
@@ -186,6 +199,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateEmailConfirm(long ID)
         {
             try

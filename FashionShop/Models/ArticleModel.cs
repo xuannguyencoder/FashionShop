@@ -9,23 +9,27 @@ namespace FashionShop.Models
 {
     public class ArticleModel
     {
-        FashionShopEntities db = null;
-        HttpContext context = HttpContext.Current;
+        private FashionShopEntities db = null;
+        private HttpContext context = HttpContext.Current;
+
         public ArticleModel()
         {
             db = new FashionShopEntities();
         }
+
         public Content GetByID(long? ID)
         {
             return db.Contents.Find(ID);
         }
+
         public List<Content> ListAll()
         {
             return db.Contents.ToList();
         }
+
         public List<Content> ListContentTagByTagID(string tagID)
         {
-            return db.ContentTags.Where(x => x.TagID == tagID).AsEnumerable().Select(x=> new Content()
+            return db.ContentTags.Where(x => x.TagID == tagID).AsEnumerable().Select(x => new Content()
             {
                 Name = x.Content.Name,
                 CreatedDate = x.Content.CreatedDate,
@@ -34,28 +38,31 @@ namespace FashionShop.Models
                 Status = x.Content.Status,
                 Image = x.Content.Image,
                 Category = x.Content.Category,
-
             }).ToList();
         }
+
         public Tag GetTagByID(string TagID)
         {
             return db.Tags.Find(TagID);
         }
+
         public List<Content> ListAllByCateID(long CateID)
         {
             return db.Contents.Where(x => x.CategoryID == CateID).ToList();
         }
+
         public Content GetByAlias(string alias)
         {
             return db.Contents.FirstOrDefault(x => x.Alias == alias);
         }
+
         public long Insert(Content content)
         {
             try
             {
                 ConvertData convertData = new ConvertData();
                 content.Alias = convertData.ConvertToAlias(content.Name);
-                content.Alias = FixAlias(content.Alias,0); //fixbug Alias lại nếu bị trùng khi thêm
+                content.Alias = FixAlias(content.Alias, 0); //fixbug Alias lại nếu bị trùng khi thêm
                 content.ViewCount = 0;
                 content.CreatedDate = DateTime.Now;
                 var user = (UserLogin)context.Session[Constant.ADMIN_SESSION];
@@ -77,7 +84,6 @@ namespace FashionShop.Models
                     }
                 }
 
-               
                 return content.ID;
             }
             catch
@@ -85,22 +91,26 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public bool CheckTag(string ID)
         {
             return db.Tags.Count(x => x.ID == ID) > 0;
         }
+
         public void InsertTag(string ID, string Name)
         {
-            Tag tag= new Tag();
+            Tag tag = new Tag();
             tag.ID = ID;
             tag.Name = Name;
             db.Tags.Add(tag);
             db.SaveChanges();
         }
+
         public List<ContentTag> ListContentTag(long ID)
         {
             return db.ContentTags.Where(x => x.ContentID == ID).ToList();
         }
+
         public void InsertContentTag(long ContentID, string TagID)
         {
             ContentTag contentTag = new ContentTag();
@@ -127,6 +137,7 @@ namespace FashionShop.Models
             }
             return alies1;
         }
+
         public bool CheckAlias(string alias, long ArticleID)
         {
             if (alias != null)
@@ -141,6 +152,7 @@ namespace FashionShop.Models
             else
                 return false;
         }
+
         public bool Update(Content content)
         {
             try
@@ -167,6 +179,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool Delete(long? ID)
         {
             try
@@ -182,11 +195,13 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public void RemoveAllContentTag(long? ContentID)
         {
             db.ContentTags.RemoveRange(db.ContentTags.Where(x => x.ContentID == ContentID));
             db.SaveChanges();
         }
+
         public bool UpdateStatus(long? ID)
         {
             try

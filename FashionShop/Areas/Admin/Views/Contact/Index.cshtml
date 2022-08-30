@@ -84,7 +84,7 @@
                                 showConfirmButton: false,
                                 timer: 1500
                             });
-                            google.maps.event.addDomListener(window, 'load', getPoint);
+                            getPoint.call();
                         }
                     }
                 });

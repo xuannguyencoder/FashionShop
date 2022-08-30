@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 
 namespace FashionShop.Models.Common
 {
     public class MoMoSecurity
     {
         private static RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+
         public MoMoSecurity()
         {
             //encrypt and decrypt password using secure
         }
+
         public string getHash(string partnerCode, string merchantRefId,
             string amount, string paymentCode, string storeId, string storeName, string publicKeyXML)
         {
@@ -42,12 +41,11 @@ namespace FashionShop.Models.Common
                 {
                     rsa.PersistKeyInCsp = false;
                 }
-
             }
 
             return result;
-
         }
+
         public string buildQueryHash(string partnerCode, string merchantRefId,
             string requestid, string publicKey)
         {
@@ -72,11 +70,9 @@ namespace FashionShop.Models.Common
                 {
                     rsa.PersistKeyInCsp = false;
                 }
-
             }
 
             return result;
-
         }
 
         public string buildRefundHash(string partnerCode, string merchantRefId,
@@ -105,12 +101,11 @@ namespace FashionShop.Models.Common
                 {
                     rsa.PersistKeyInCsp = false;
                 }
-
             }
 
             return result;
-
         }
+
         public string signSHA256(string message, string key)
         {
             byte[] keyByte = Encoding.UTF8.GetBytes(key);
@@ -121,7 +116,6 @@ namespace FashionShop.Models.Common
                 string hex = BitConverter.ToString(hashmessage);
                 hex = hex.Replace("-", "").ToLower();
                 return hex;
-
             }
         }
     }

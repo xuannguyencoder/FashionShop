@@ -1,11 +1,8 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.Common;
 using FashionShop.Models.EF;
-using FashionShop.Models.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Controllers
@@ -21,19 +18,17 @@ namespace FashionShop.Controllers
             {
                 return HttpNotFound();
             }
-            var Images = new List<ProductImageViewModel>();
-            foreach (var item in proImageModel.ListByProductID(product.ID))
-            {
-                Images.Add(new ProductImageViewModel(item.ProductID, item.ColorCode, item.Image, item.DisplayOrder));
-            }
-            ViewBag.Images = Images;
+
+            ViewBag.Images = proImageModel.ListByProductID(product.ID);
             return View(product);
         }
+
         [ChildActionOnly]
-        public ActionResult _ProductList(string alias ,long CateID, int pageIndex = 1, int pageSize = 9)
+        public ActionResult _ProductList(string alias, long CateID, int pageIndex = 1, int pageSize = 9)
         {
             ProductModel proModel = new ProductModel();
-            var products = proModel.ListAllByCateID(CateID).Where(x => x.Status == true && x.ProductCategory.Status == true);
+            var products = proModel.ListAllByCateID(CateID);
+            products = products.Where(x => x.Status == true && x.ProductCategory.Status == true).ToList();
             ViewBag.CategoryID = CateID;
             ViewBag.Alias = alias;
 
@@ -62,6 +57,7 @@ namespace FashionShop.Controllers
 
             return PartialView(products);
         }
+
         [ChildActionOnly]
         public ActionResult _RelatedProducts(long ProductID, long CategoryID)
         {
@@ -70,6 +66,7 @@ namespace FashionShop.Controllers
                 x => x.ProductCategoryID == CategoryID && x.ID != ProductID && x.Status == true).Take(4);
             return PartialView(products.ToList());
         }
+
         [ChildActionOnly]
         public ActionResult _ProductReview(long ProductID)
         {
@@ -78,6 +75,7 @@ namespace FashionShop.Controllers
             var proReviews = proReviewModel.GetByProductID(ProductID);
             return PartialView(proReviews);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SendReview(long ID, FormCollection form)

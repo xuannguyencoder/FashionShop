@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace FashionShop.Models.Common
 {
@@ -20,20 +17,23 @@ namespace FashionShop.Models.Common
             str = str.Replace(";", "-");
             str = str.Replace(":", "-");
             str = str.Replace(" ", "-");
-            return str.ToLower(); 
+            return str.ToLower();
         }
+
         public string ConvertToUnSigned(string str)
         {
             Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
             string temp = str.Normalize(NormalizationForm.FormD);
             return regex.Replace(temp, String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
         }
+
         public string RemoveWhitespace(string str)
         {
             Regex trimmer = new Regex(@"\s\s+"); // Xóa khoảng trắng thừa trong chuỗi
             str = trimmer.Replace(str, " ");
             return str;
         }
+
         public static string Encryptor(string toEncrypt)
         {
             string key = "khongcokey";
@@ -59,6 +59,7 @@ namespace FashionShop.Models.Common
 
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);
         }
+
         public static string Decrypt(string toDecrypt)
         {
             string key = "khongcokey";
@@ -84,21 +85,22 @@ namespace FashionShop.Models.Common
 
             return UTF8Encoding.UTF8.GetString(resultArray);
         }
+
         public static string MD5Hash(string text)
         {
             MD5 md5 = new MD5CryptoServiceProvider();
 
-            //compute hash from the bytes of text  
+            //compute hash from the bytes of text
             md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
 
-            //get hash result after compute it  
+            //get hash result after compute it
             byte[] result = md5.Hash;
 
             StringBuilder strBuilder = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
             {
-                //change it into 2 hexadecimal digits  
-                //for each byte  
+                //change it into 2 hexadecimal digits
+                //for each byte
                 strBuilder.Append(result[i].ToString("x2"));
             }
             return strBuilder.ToString();

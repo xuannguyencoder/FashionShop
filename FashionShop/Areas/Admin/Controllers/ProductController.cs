@@ -11,9 +11,10 @@ namespace FashionShop.Areas.Admin.Controllers
 {
     public class ProductController : BaseController
     {
-        ProductModel productModel = new ProductModel();
-        ProductCategoryModel productCateModel = new ProductCategoryModel();
-        ProductImageModel proImageModel = null;
+        private ProductModel productModel = new ProductModel();
+        private ProductCategoryModel productCateModel = new ProductCategoryModel();
+        private ProductImageModel proImageModel = null;
+
         public ActionResult Index()
         {
             var model = productModel.ListAll();
@@ -21,11 +22,13 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.ProductImages = proImageModel.ListAll();
             return View(model);
         }
+
         public ActionResult Create()
         {
             ViewBag.ProductCateList = DDLProductCate();
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -54,6 +57,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.ProductCateList = DDLProductCate();
             return View(product);
         }
+
         public ActionResult Edit(long? ID)
         {
             if (ID == null)
@@ -68,6 +72,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.ProductCateList = DDLProductCate();
             return View(product);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -88,11 +93,12 @@ namespace FashionShop.Areas.Admin.Controllers
                 else
                 {
                     ModelState.AddModelError("Alias", "Alias này đã tồn tại");
-                }    
+                }
             }
             ViewBag.ProductCateList = DDLProductCate();
             return View(product);
         }
+
         public ActionResult Delete(long? ID)
         {
             if (ID == null)
@@ -112,6 +118,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return RedirectToAction("Index");
         }
+
         public ActionResult UpdateStatus(long? ID)
         {
             if (ID == null)
@@ -128,6 +135,7 @@ namespace FashionShop.Areas.Admin.Controllers
             else
                 return View("_Error404");
         }
+
         public bool CheckExtension(string extension)
         {
             if (extension.ToLower() == ".jpg" || extension.ToLower() == ".jpeg" || extension.ToLower() == ".png")
@@ -139,6 +147,7 @@ namespace FashionShop.Areas.Admin.Controllers
                 return false;
             }
         }
+
         private List<SelectListItem> DDLProductCate()
         {
             var productCateList = new SelectList(new List<SelectListItem>()).ToList();
@@ -171,13 +180,14 @@ namespace FashionShop.Areas.Admin.Controllers
             {
                 filename = Path.GetFileNameWithoutExtension(uploadFiles.FileName);
                 extension = Path.GetExtension(uploadFiles.FileName);
-                imageName = DateTime.Now.ToString("yymmssfff")+"_"+filename;
+                imageName = DateTime.Now.ToString("yymmssfff") + "_" + filename;
                 imageSavePath = Server.MapPath("/Assets/images/uploads/summerNote/") + imageName + extension;
                 uploadFiles.SaveAs(imageSavePath);
                 returnImagePath = "/Assets/images/uploads/summerNote/" + imageName + extension;
             }
             return Json(Convert.ToString(returnImagePath), JsonRequestBehavior.AllowGet);
         }
+
         public bool CheckAlias(string alias, long productID)
         {
             var flag = true;

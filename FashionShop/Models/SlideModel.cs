@@ -8,21 +8,24 @@ namespace FashionShop.Models
 {
     public class SlideModel
     {
-        FashionShopEntities db = null;
-        HttpContext context = HttpContext.Current;
+        private FashionShopEntities db = null;
+        private HttpContext context = HttpContext.Current;
+
         public SlideModel()
         {
             db = new FashionShopEntities();
         }
+
         public Slide GetByID(long? ID)
         {
             return db.Slides.Find(ID);
         }
+
         public List<Slide> ListAll()
         {
             return db.Slides.ToList();
         }
-    
+
         public long Insert(Slide slide)
         {
             try
@@ -38,6 +41,7 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public bool Update(Slide slide)
         {
             try
@@ -57,6 +61,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool Delete(long? ID)
         {
             try
@@ -71,6 +76,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateStatus(long? ID)
         {
             try

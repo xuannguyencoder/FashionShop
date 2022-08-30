@@ -1,8 +1,4 @@
 ﻿using FashionShop.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Areas.Admin.Controllers
@@ -17,6 +13,7 @@ namespace FashionShop.Areas.Admin.Controllers
 
             return View(orders);
         }
+
         public ActionResult OrderDetail(long? ID)
         {
             OrderModel orderModel = new OrderModel();
@@ -47,6 +44,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return RedirectToAction("Index");
         }
+
         public ActionResult OrderCancelled(long OrderID)
         {
             OrderModel orderModel = new OrderModel();

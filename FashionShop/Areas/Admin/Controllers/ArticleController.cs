@@ -1,5 +1,4 @@
 ﻿using FashionShop.Models;
-using FashionShop.Models.Common;
 using FashionShop.Models.EF;
 using System;
 using System.Collections.Generic;
@@ -12,18 +11,21 @@ namespace FashionShop.Areas.Admin.Controllers
 {
     public class ArticleController : BaseController
     {
-        ArticleModel articleModel = new ArticleModel();
-        ArticleCategoryModel articleCateModel = new ArticleCategoryModel();
+        private ArticleModel articleModel = new ArticleModel();
+        private ArticleCategoryModel articleCateModel = new ArticleCategoryModel();
+
         public ActionResult Index()
         {
             var model = articleModel.ListAll();
             return View(model);
         }
+
         public ActionResult Create()
         {
             ViewBag.ArticleCateList = DDLArticleCate();
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -91,12 +93,12 @@ namespace FashionShop.Areas.Admin.Controllers
                     {
                         ModelState.AddModelError("Alias", "Alias này đã tồn tại");
                     }
-
                 }
             }
             ViewBag.ArticleCateList = DDLArticleCate();
             return View(article);
         }
+
         public bool CheckAlias(string alias, long articleID)
         {
             var flag = true;
@@ -106,6 +108,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return flag;
         }
+
         public ActionResult Edit(long? ID)
         {
             if (ID == null)
@@ -121,6 +124,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.ArticleCateList = DDLArticleCate();
             return View(article);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -156,7 +160,7 @@ namespace FashionShop.Areas.Admin.Controllers
                                     return RedirectToAction("Index");
                                 }
                             }
-                            else 
+                            else
                                 ModelState.AddModelError("Alias", "Alias này đã tồn tại");
                         }
                         else
@@ -184,6 +188,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.ArticleCateList = DDLArticleCate();
             return View(article);
         }
+
         public ActionResult Delete(long? ID)
         {
             if (ID == null)
@@ -209,6 +214,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return View(); //error
         }
+
         public ActionResult UpdateStatus(long? ID)
         {
             if (ID == null)
@@ -225,6 +231,7 @@ namespace FashionShop.Areas.Admin.Controllers
             else
                 return View("_Error404");
         }
+
         public bool CheckExtension(string extension)
         {
             if (extension.ToLower() == ".jpg" || extension.ToLower() == ".jpeg" || extension.ToLower() == ".png")
@@ -236,6 +243,7 @@ namespace FashionShop.Areas.Admin.Controllers
                 return false;
             }
         }
+
         private List<SelectListItem> DDLArticleCate()
         {
             var articleCateList = new SelectList(new List<SelectListItem>()).ToList();

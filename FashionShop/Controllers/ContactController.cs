@@ -1,9 +1,5 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.EF;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Controllers
@@ -24,19 +20,34 @@ namespace FashionShop.Controllers
             }
             return View();
         }
+
         [HttpPost]
         public ActionResult Feedback(Feedback feedback)
         {
-            FeedbackModel feedbackModel = new FeedbackModel();
-            long result = feedbackModel.Insert(feedback);
-            if (result > 0)
+            if (ModelState.IsValid)
             {
-                TempData["Message"] = "Gửi phản hồi thành công";
-                TempData["Status"] = "success";
-                return RedirectToRoute("lienhe");
+                FeedbackModel feedbackModel = new FeedbackModel();
+                long result = feedbackModel.Insert(feedback);
+                if (result > 0)
+                {
+                    TempData["Message"] = "Gửi phản hồi thành công";
+                    TempData["Status"] = "success";
+                    return RedirectToRoute("lienhe");
+                }
             }
-            return View(feedback);
+            ContactModel contactModel = new ContactModel();
+            var contact = contactModel.GetActive();
+            if (contact != null)
+            {
+                ViewBag.Contact = contact;
+            }
+            else
+            {
+                ViewBag.Contact = new Contact();
+            }
+            return View("Index", feedback);
         }
+
         [HttpPost]
         public JsonResult GetPoint()
         {
@@ -53,6 +64,5 @@ namespace FashionShop.Controllers
 
             return Json(new { pointX = contact.PointX, pointY = contact.PointY }, JsonRequestBehavior.AllowGet);
         }
-
     }
 }

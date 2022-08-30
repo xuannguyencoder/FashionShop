@@ -1,9 +1,9 @@
 ﻿@model FashionShop.Models.EF.Product
-@using FashionShop.Models.ViewModel
+
 @{
     ViewBag.Title = "ProductDetail";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
-    var Images = (List<ProductImageViewModel>)ViewBag.Images;
+    var Images = (List<FashionShop.Models.EF.ProductImage>)ViewBag.Images;
 }
 <div class="breadcrumb-option">
     <div class="container">

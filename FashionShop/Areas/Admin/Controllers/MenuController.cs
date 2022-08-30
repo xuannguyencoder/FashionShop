@@ -1,23 +1,22 @@
 ﻿using FashionShop.Models;
-using FashionShop.Models.Common;
 using FashionShop.Models.EF;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Areas.Admin.Controllers
 {
     public class MenuController : BaseController
     {
-        MenuModel menuModel = new MenuModel();
-        MenuTypeModel menuTypeModel = new MenuTypeModel();
+        private MenuModel menuModel = new MenuModel();
+        private MenuTypeModel menuTypeModel = new MenuTypeModel();
+
         public ActionResult Index()
         {
             var model = MenuListDisplayOrder();
             return View(model);
         }
+
         public ActionResult Create()
         {
             var menuType = menuTypeModel.FirstOrDefault();
@@ -32,6 +31,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.MenuTypeList = new SelectList(menuTypeModel.ListAll(), "ID", "Name").ToList();
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(FormCollection form, Menu menu)
@@ -39,7 +39,7 @@ namespace FashionShop.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 if (menu.Type != "url")
-                    menu.Link = menu.Type+"/" + form["CategoryID"].ToString();
+                    menu.Link = menu.Type + "/" + form["CategoryID"].ToString();
                 if (CheckAlias(menu.Alias, menu.ID))
                 {
                     var result = menuModel.Insert(menu);
@@ -62,6 +62,7 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.MenuTypeList = new SelectList(menuTypeModel.ListAll(), "ID", "Name").ToList();
             return View();
         }
+
         public ActionResult Edit(long? ID)
         {
             if (ID == null)
@@ -82,9 +83,10 @@ namespace FashionShop.Areas.Admin.Controllers
             ViewBag.MenuDisplayOrderList = menus;
             return View(menu);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(FormCollection form,Menu menu)
+        public ActionResult Edit(FormCollection form, Menu menu)
         {
             if (ModelState.IsValid)
             {
@@ -124,16 +126,16 @@ namespace FashionShop.Areas.Admin.Controllers
 
         private List<Menu> MenuListDisplayOrder()
         {
-            List<Menu> menus = new List<Menu> ();
+            List<Menu> menus = new List<Menu>();
             foreach (var item in menuModel.ListAllOrderBy())
             {
                 string name = "";
                 for (int i = 1; i <= item.Level; i++)
                 {
-                    name+= " - ";
+                    name += " - ";
                 }
                 var item2 = item;
-                item2.Name = name +item.Name;
+                item2.Name = name + item.Name;
                 if (item.Level == 1)
                 {
                     menus.Insert(0, item2);
@@ -147,10 +149,11 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return menus;
         }
+
         private List<SelectListItem> DDLMenu(int? TypeID)
         {
             var menuList = new SelectList(new List<SelectListItem>()).ToList();
-            foreach (var item in menuModel.ListAllOrderBy().Where(x=>x.MenuTypeID == TypeID))
+            foreach (var item in menuModel.ListAllOrderBy().Where(x => x.MenuTypeID == TypeID))
             {
                 string name = "";
                 for (int i = 1; i <= item.Level; i++)
@@ -159,18 +162,19 @@ namespace FashionShop.Areas.Admin.Controllers
                 }
                 if (item.Level == 1)
                 {
-                    menuList.Insert(0, new SelectListItem { Text = name+item.Name, Value = item.ID.ToString() });
+                    menuList.Insert(0, new SelectListItem { Text = name + item.Name, Value = item.ID.ToString() });
                 }
                 else
                 {
                     var menu = menuModel.GetByID(item.ParentID);
                     var index = menuList.FindIndex(x => x.Value == menu.ID.ToString()) + 1;
-                    menuList.Insert(index, new SelectListItem { Text = name+item.Name, Value = item.ID.ToString() });
+                    menuList.Insert(index, new SelectListItem { Text = name + item.Name, Value = item.ID.ToString() });
                 }
             }
             menuList.Insert(0, (new SelectListItem { Text = "Đây là mục menu chính", Value = "0" }));
             return menuList;
         }
+
         public ActionResult UpdateStatus(int? ID)
         {
             if (ID == null)
@@ -187,6 +191,7 @@ namespace FashionShop.Areas.Admin.Controllers
             else
                 return View("_Error404");
         }
+
         public ActionResult Delete(int? ID)
         {
             if (ID == null)
@@ -210,37 +215,36 @@ namespace FashionShop.Areas.Admin.Controllers
             var data = DDLMenu(TypeID);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+
         [HttpGet]
         public JsonResult GetList(string Type, string Link)
         {
             long selected = 0;
             try
             {
-               
-                if (Link!=null)
+                if (Link != null)
                 {
                     string[] arrListStr = Link.Split('/');
                     selected = long.Parse(arrListStr[1]);
                 }
-
             }
             catch
             {
-
             }
             List<SelectListItem> data = new List<SelectListItem>();
-            if (Type=="danhmucsanpham")
+            if (Type == "danhmucsanpham")
             {
                 ProductCategoryModel proCateModel = new ProductCategoryModel();
                 data = new SelectList(proCateModel.ListAll(), "ID", "Name", selected).ToList();
             }
-            else if(Type == "danhmucbaiviet")
+            else if (Type == "danhmucbaiviet")
             {
                 ArticleCategoryModel articleCateModel = new ArticleCategoryModel();
                 data = new SelectList(articleCateModel.ListAll(), "ID", "Name", selected).ToList();
             }
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+
         public bool CheckAlias(string alias, int menuID)
         {
             var flag = true;
@@ -250,6 +254,5 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return flag;
         }
-
     }
 }

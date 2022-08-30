@@ -1,9 +1,9 @@
 ﻿@model FashionShop.Models.EF.ProductDetail
-@using FashionShop.Models.ViewModel;
+
 @{
     ViewBag.Title = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
-    ProductViewModel product = (ProductViewModel)ViewBag.product;
+    var product = (FashionShop.Models.EF.Product)ViewBag.product;
 }
 <span id="message" class="d-none">@TempData["Message"]</span>
 <span id="status" class="d-none">@TempData["Status"]</span>
@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     @Html.LabelFor(model => model.Product.ProductCategory.Name)
-                                    <input type="text" class="form-control" readonly value="@product.CateName" />
+                                    <input type="text" class="form-control" readonly value="@product.ProductCategory.Name" />
                                 </div>
                             </div>
                             <div class="form-row">

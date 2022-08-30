@@ -1,30 +1,34 @@
-﻿using System;
+﻿using FashionShop.Models.Common;
+using FashionShop.Models.EF;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using FashionShop.Models.Common;
-using FashionShop.Models.EF;
+
 namespace FashionShop.Models
 {
     public class MenuModel
     {
-        FashionShopEntities db = null;
+        private FashionShopEntities db = null;
+
         public MenuModel()
         {
             db = new FashionShopEntities();
         }
+
         public Menu GetByID(long? ID)
         {
-            return db.Menus.Find(ID); 
+            return db.Menus.Find(ID);
         }
+
         public List<Menu> ListOrderByDisplayOrder()
         {
             return db.Menus.OrderBy(x => x.DisplayOrder).ToList();
         }
+
         public Menu GetByAlias(string alias)
         {
-            return db.Menus.Where(x=>x.Type !="url").FirstOrDefault(x => x.Alias == alias);
+            return db.Menus.Where(x => x.Type != "url").FirstOrDefault(x => x.Alias == alias);
         }
+
         public string FixAlias(string alias, int MenuID)
         {
             bool flag = true;
@@ -42,6 +46,7 @@ namespace FashionShop.Models
             }
             return alias1;
         }
+
         public bool CheckAlias(string alias, int MenuID)
         {
             if (alias != null)
@@ -56,14 +61,17 @@ namespace FashionShop.Models
             else
                 return false;
         }
+
         public List<Menu> ListAll()
         {
             return db.Menus.ToList();
         }
+
         public List<Menu> ListAllOrderBy()
         {
             return db.Menus.OrderByDescending(x => x.DisplayOrder).ToList().OrderBy(x => x.Level).ToList();
         }
+
         public long Insert(Menu menu)
         {
             try
@@ -97,6 +105,7 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public bool Update(Menu menu)
         {
             try
@@ -145,6 +154,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         private void UpdateDisLayOrder(int ptNew, int ptOul, Menu menu)
         {
             var menus = new List<Menu>();
@@ -192,6 +202,7 @@ namespace FashionShop.Models
                 db.SaveChanges();
             }
         }
+
         public bool Delete(long? ID)
         {
             try
@@ -206,6 +217,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateStatus(int? ID)
         {
             try
@@ -223,6 +235,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateLevel(int menuId)
         {
             try
@@ -232,9 +245,8 @@ namespace FashionShop.Models
                 {
                     menu = db.Menus.Find(menuId);
                 }
-                foreach (var item in db.Menus.Where(x=>x.ParentID== menu.ID))
+                foreach (var item in db.Menus.Where(x => x.ParentID == menu.ID))
                 {
-
                     var tempMenu = db.Menus.Find(item.ID);
                     tempMenu.Level = menu.Level + 1;
                     tempMenu.MenuTypeID = menu.MenuTypeID;

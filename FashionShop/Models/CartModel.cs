@@ -1,13 +1,13 @@
-﻿using System;
+﻿using FashionShop.Models.Common;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using FashionShop.Models.Common;
+
 namespace FashionShop.Models
 {
     public class CartModel
     {
-        HttpContext context = HttpContext.Current;
+        private HttpContext context = HttpContext.Current;
+
         public List<CartItem> ListAll()
         {
             var sessionCart = context.Session[Constant.CartSession];
@@ -17,21 +17,24 @@ namespace FashionShop.Models
                 model = new List<CartItem>();
             }
             return model;
-
         }
+
         public void Update(List<CartItem> cart)
         {
             context.Session[Constant.CartSession] = cart;
         }
+
         public void DeleteAll()
         {
             context.Session[Constant.CartSession] = null;
         }
+
         public void Delete(long productDetailID)
         {
             var sessionCart = ListAll();
-            sessionCart.RemoveAll(x => x.ProductDetail.ID ==productDetailID);
+            sessionCart.RemoveAll(x => x.ProductDetail.ID == productDetailID);
         }
+
         public decimal getCartTotal()
         {
             var model = ListAll();

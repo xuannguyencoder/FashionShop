@@ -1,9 +1,8 @@
 ﻿@model FashionShop.Models.EF.ProductDetail
-@using FashionShop.Models.ViewModel;
+
 @{
     ViewBag.Title = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_HomeLayout.cshtml";
-    ProductViewModel product = (ProductViewModel)ViewBag.product;
 }
 <span id="message" class="d-none">@TempData["Message"]</span>
 <span id="status" class="d-none">@TempData["Status"]</span>
@@ -12,7 +11,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.Hidden("ProductID", product.ID, new { @class = "form-control d-none" })
+        @Html.Hidden("ProductID", Model.Product.ID, new { @class = "form-control d-none" })
         <div class="row page-titles mx-0">
             <div class="col-sm-6 p-md-0">
                 <div class="welcome-text">
@@ -27,7 +26,7 @@
             <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                 <div>
                     <button type="submit" name="btnAdd" class="btn btn-primary">Lưu</button>
-                    <a href="/admin/san-pham/chi-tiet/ID=@product.ID" class="btn btn-secondary">Trở về</a>
+                    <a href="/admin/san-pham/chi-tiet/ID=@Model.Product.ID" class="btn btn-secondary">Trở về</a>
                 </div>
             </div>
         </div>
@@ -40,11 +39,11 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     @Html.LabelFor(model => model.Product.Name)
-                                    <input type="text" class="form-control" readonly value="@product.Name" />
+                                    <input type="text" class="form-control" readonly value="@Model.Product.Name" />
                                 </div>
                                 <div class="form-group col-md-6">
                                     @Html.LabelFor(model => model.Product.ProductCategory.Name)
-                                    <input type="text" class="form-control" readonly value="@product.CateName" />
+                                    <input type="text" class="form-control" readonly value="@Model.Product.ProductCategory.Name" />
                                 </div>
                             </div>
                             <div class="form-row">

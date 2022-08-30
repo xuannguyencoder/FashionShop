@@ -1,10 +1,8 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.EF;
-using FashionShop.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Controllers
@@ -15,12 +13,12 @@ namespace FashionShop.Controllers
         {
             ProductModel productModel = new ProductModel();
             var products = productModel.ListAll().Where(
-                x => x.Status == true && x.ProductCategory.Status == true&& x.CreatedDate>= DateTime.Today.AddDays(-10));
+                x => x.Status == true && x.ProductCategory.Status == true && x.CreatedDate >= DateTime.Today.AddDays(-20));
             ProductImageModel proImageModel = new ProductImageModel();
 
             MenuTypeModel menuTypeModel = new MenuTypeModel();
             var menuTypes = menuTypeModel.ListAllByPosition(2).Where(x => x.Status = true).FirstOrDefault();
-            if (menuTypes!=null)
+            if (menuTypes != null)
                 ViewBag.ProductMenu = menuTypes.Menus.ToList();
             else
                 ViewBag.ProductMenu = new List<Menu>();
@@ -45,6 +43,7 @@ namespace FashionShop.Controllers
 
             return View(products);
         }
+
         [HttpPost]
         public ActionResult SearchProduct(FormCollection values)
         {
@@ -55,6 +54,7 @@ namespace FashionShop.Controllers
             }
             return RedirectToAction("SearchProduct", new { keyword = keyword });
         }
+
         public ActionResult SearchProduct(string keyword, int pageIndex = 1, int pageSize = 12)
         {
             ProductModel productModel = new ProductModel();
@@ -94,40 +94,44 @@ namespace FashionShop.Controllers
             ViewBag.CartCount = cartModel.ListAll().Count();
             return PartialView(menuTypes);
         }
+
         [ChildActionOnly]
         public ActionResult _Categories()
         {
             return PartialView();
         }
-        
+
         [ChildActionOnly]
         public ActionResult _SidebarLeft()
         {
             MenuTypeModel menuTypeModel = new MenuTypeModel();
-            var menuTypes = menuTypeModel.ListAllByPosition(4).Where(x=>x.Status == true).ToList();
+            var menuTypes = menuTypeModel.ListAllByPosition(4).Where(x => x.Status == true).ToList();
 
             return PartialView(menuTypes);
         }
+
         [ChildActionOnly]
         public ActionResult _TrendSpad()
         {
             return PartialView();
         }
+
         [ChildActionOnly]
         public ActionResult _BannerBottom()
         {
             return PartialView();
         }
+
         [ChildActionOnly]
         public ActionResult _ServicesSpad()
         {
             return PartialView();
         }
+
         [ChildActionOnly]
         public ActionResult _Instagram()
         {
             return PartialView();
         }
     }
-    
 }

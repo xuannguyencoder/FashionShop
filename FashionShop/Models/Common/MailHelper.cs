@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using System.Web;
 
 namespace FashionShop.Models.Common
 {
@@ -31,12 +28,12 @@ namespace FashionShop.Models.Common
                 client.Send(mail);
                 return true;
             }
-            catch 
+            catch
             {
-
             }
             return false;
         }
+
         private static MailMessage SetUpMail(string body, string from, string to, string subject, string bcc, string cc)
         {
             MailMessage mail = new MailMessage();
@@ -56,6 +53,7 @@ namespace FashionShop.Models.Common
             mail.IsBodyHtml = true;
             return mail;
         }
+
         private static SmtpClient SetUpSmtp(int Port, string Host, bool EnabledSSL)
         {
             SmtpClient client = new SmtpClient();
@@ -64,9 +62,9 @@ namespace FashionShop.Models.Common
             client.EnableSsl = EnabledSSL;
             client.UseDefaultCredentials = true;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.Credentials = 
+            client.Credentials =
             new System.Net.NetworkCredential(
-                ConfigurationManager.AppSettings["EmailAddress"].ToString(), 
+                ConfigurationManager.AppSettings["EmailAddress"].ToString(),
                 ConfigurationManager.AppSettings["EmailPassword"].ToString()
             );
             return client;

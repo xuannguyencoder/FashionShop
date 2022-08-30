@@ -9,35 +9,41 @@ namespace FashionShop.Models
 {
     public class ProductModel
     {
-        FashionShopEntities db = null;
-        HttpContext context = HttpContext.Current;
+        private FashionShopEntities db = null;
+        private HttpContext context = HttpContext.Current;
+
         public ProductModel()
         {
             db = new FashionShopEntities();
         }
+
         public Product GetByID(long? ID)
         {
             return db.Products.Find(ID);
         }
+
         public List<Product> ListAll()
         {
             return db.Products.ToList();
         }
+
         public List<Product> ListAllByCateID(long CateID)
         {
-            return db.Products.Where(x=>x.ProductCategoryID == CateID).ToList();
+            return db.Products.Where(x => x.ProductCategoryID == CateID).ToList();
         }
+
         public Product GetByAlias(string alias)
         {
             return db.Products.FirstOrDefault(x => x.Alias == alias);
         }
+
         public long Insert(Product product)
         {
             try
             {
                 ConvertData convertData = new ConvertData();
                 product.Alias = convertData.ConvertToAlias(product.Name);
-                product.Alias = FixAlias(product.Alias,0); //fixbug Alias lại nếu bị trùng khi thêm
+                product.Alias = FixAlias(product.Alias, 0); //fixbug Alias lại nếu bị trùng khi thêm
 
                 product.Price = product.Price.GetValueOrDefault(0);
                 product.PromotionPrice = product.PromotionPrice.GetValueOrDefault(0);
@@ -54,6 +60,7 @@ namespace FashionShop.Models
                 return 0;
             }
         }
+
         public string FixAlias(string alias, long ProductID)
         {
             bool flag = true;
@@ -71,6 +78,7 @@ namespace FashionShop.Models
             }
             return alias1;
         }
+
         public bool CheckAlias(string alias, long ProductID)
         {
             if (alias != null)
@@ -114,6 +122,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool Delete(long? ID)
         {
             try
@@ -128,6 +137,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public bool UpdateStatus(long? ID)
         {
             try
@@ -145,6 +155,7 @@ namespace FashionShop.Models
                 return false;
             }
         }
+
         public List<Product> Search(string productName)
         {
             IQueryable<Product> model = db.Products;
@@ -152,7 +163,7 @@ namespace FashionShop.Models
             {
                 model = model.Where(x => x.Name.Contains(productName));
             }
-            return model.Where(x=>x.Status == true && x.ProductCategory.Status == true).ToList();
+            return model.Where(x => x.Status == true && x.ProductCategory.Status == true).ToList();
         }
     }
 }

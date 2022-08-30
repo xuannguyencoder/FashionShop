@@ -3,31 +3,30 @@ using FashionShop.Models.Common;
 using FashionShop.Models.EF;
 using FashionShop.Models.ViewModel;
 using Microsoft.Owin.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Security.Claims;
-using System.Web.Mvc;
 using Microsoft.Owin.Security.Cookies;
+using System;
+using System.Security.Claims;
+using System.Web;
+using System.Web.Mvc;
 
 namespace FashionShop.Controllers
 {
     public class AccountController : Controller
     {
-        CustomerModel customerModel = null;
+        private CustomerModel customerModel = new CustomerModel();
+
         public ActionResult Login()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                customerModel = new CustomerModel();
-                var result = customerModel.Login(viewModel.Username, ConvertData.Encryptor(viewModel.Password));
+                var result = customerModel.Login(viewModel.Username, viewModel.Password);
                 if (result == 1)
                 {
                     var user = customerModel.GetByUsername(viewModel.Username);
@@ -53,27 +52,28 @@ namespace FashionShop.Controllers
                 {
                     ModelState.AddModelError("Username", "Tài khoản không tồn tại");
                 }
-
             }
             return View();
         }
+
         public ActionResult Logout()
         {
             HttpContext.GetOwinContext().Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             Session.Remove(Constant.CUSTOMER_SESSION);
             return View("Login");
         }
+
         public ActionResult Register()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                customerModel = new CustomerModel();
                 bool checkUsername = customerModel.CheckUsername(model.Username);
                 if (checkUsername)
                 {
@@ -100,20 +100,22 @@ namespace FashionShop.Controllers
             }
             return View();
         }
-        public void SignIn(string ReturnUrl = "/", string type = "")
+
+        public void SignIn(string ReturnUrl = "/", string Type = "")
         {
             if (!Request.IsAuthenticated)
             {
-                if (type == "google")
+                if (Type == "google")
                 {
                     HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "Account/GoogleLoginCallback" }, "Google");
                 }
-                if (type == "microsoft")
+                if (Type == "microsoft")
                 {
                     HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "Account/GoogleLoginCallback" }, "Microsoft");
                 }
             }
         }
+
         [AllowAnonymous]
         public ActionResult GoogleLoginCallback()
         {
@@ -125,20 +127,19 @@ namespace FashionShop.Controllers
             }
             else
             {
-                CustomerModel userModel = new CustomerModel();
                 Customer user = new Customer();
-                if (!userModel.CheckUsername(loginInfo.EmailAddress))
+                if (!customerModel.CheckUsername(loginInfo.EmailAddress))
                 {
                     user.Email = loginInfo.EmailAddress;
                     user.Username = loginInfo.EmailAddress;
                     user.FirstName = loginInfo.SurName;
                     user.LastName = loginInfo.GiveName;
 
-                    user.ID = userModel.InsertAccountGoogle(user);
+                    user.ID = customerModel.InsertAccountGoogle(user);
                 }
                 else
                 {
-                    user = userModel.GetByUsername(loginInfo.EmailAddress);
+                    user = customerModel.GetByUsername(loginInfo.EmailAddress);
                 }
                 var userSession = new UserLogin();
                 userSession.FirstName = loginInfo.SurName;
@@ -161,104 +162,112 @@ namespace FashionShop.Controllers
             //HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
             //return Redirect("~/");
         }
+
         public ActionResult Forget()
         {
             return View();
         }
-        //[HttpPost]
-        //public ActionResult Forget(ForgetViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = userModel.GetByEmail(model.Email);
-        //        if (user == null)
-        //        {
-        //            ModelState.AddModelError("", "Email chưa đăng ký");
-        //        }
-        //        else if (user.EmailConfirmed == false)
-        //        {
-        //            ModelState.AddModelError("", "Email chưa xác thực");
-        //        }
-        //        else
-        //        {
-        //            if (user.Type == "User")
-        //            {
-        //                ModelState.Clear();
-        //                Random rd = new Random();
-        //                string code = rd.Next(000000, 1000000).ToString();
-        //                //add UserCode to session
-        //                UserCode userCode = new UserCode();
-        //                userCode.UserID = user.ID;
-        //                userCode.Code = code;
-        //                userCode.Email = user.Email;
-        //                userCode.Status = false;
-        //                Session.Add(Constant.CodeSession, userCode);
 
-        //                string body = "<p>Mã xác thực của bạn là:" + userCode.Code + "</p>";
-        //                MailHelper.SendMail("Xác thực đăng nhập", body, userCode.Email);
-        //                return RedirectToAction("ConfirmCode");
-        //            }
-        //        }
-        //    }
-        //    return View();
-        //}
-        //public ActionResult ConfirmCode()
-        //{
-        //    var model = (UserCode)Session["CodeSession"];
-        //    if (model == null)
-        //    {
-        //        return View("Forget");
-        //    }
-        //    return View();
-        //}
-        //[HttpPost]
-        //public ActionResult ConfirmCode(UserCode userCode)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var UserCodeSess = (UserCode)Session["CodeSession"];
-        //        if (userCode.Code == UserCodeSess.Code)
-        //        {
-        //            UserCodeSess.Status = true;
-        //            Session["CodeSession"] = UserCodeSess;
-        //            return RedirectToAction("NewPassword");
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError("", "Mã xác thực chưa đúng");
-        //        }
-        //    }
-        //    return View();
-        //}
-        //public ActionResult NewPassword()
-        //{
-        //    var userCodeSess = (UserCode)Session["CodeSession"];
-        //    if (userCodeSess == null || userCodeSess.Status == false)
-        //    {
-        //        return View("Forget");
-        //    }
-        //    var user = userModel.GetByEmail(userCodeSess.Email);
-        //    NewPasswordViewModel model = new NewPasswordViewModel();
-        //    model.ID = user.ID;
-        //    return View(model);
-        //}
-        //[HttpPost]
-        //public ActionResult NewPassword(NewPasswordViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        User user = new User();
-        //        user.ID = model.ID;
-        //        user.Password = model.Password;
-        //        bool result = userModel.UpdatePassword(user);
-        //        if (result)
-        //        {
-        //            TempData["Message"] = "Lấy lại mật khẩu thành công";
-        //            TempData["Status"] = "success";
-        //            return RedirectToAction("Login");
-        //        }
-        //    }
-        //    return View();
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Forget(ForgetViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = customerModel.GetByEmail(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError("Email", "Email chưa đăng ký");
+                }
+                else if (user.EmailConfirmed == false)
+                {
+                    ModelState.AddModelError("Email", "Email chưa xác thực");
+                }
+                else
+                {
+                    if (user.Type == "Shop")
+                    {
+                        Random rd = new Random();
+                        string code = rd.Next(000000, 1000000).ToString();
+                        //add UserCode to session
+                        UserCode userCode = new UserCode();
+                        userCode.UserID = user.ID;
+                        userCode.Code = code;
+                        userCode.Email = user.Email;
+                        userCode.Status = false;
+                        Session.Add(Constant.CodeSession, userCode);
+
+                        string body = "<p>Mã xác thực của bạn là:" + userCode.Code + "</p>";
+                        MailHelper.SendMail("Xác thực đăng nhập", body, userCode.Email);
+                        return RedirectToAction("ConfirmCode");
+                    }
+                }
+            }
+            return View();
+        }
+
+        public ActionResult ConfirmCode()
+        {
+            var model = (UserCode)Session["CodeSession"];
+            if (model == null)
+            {
+                return View("Forget");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConfirmCode(UserCode userCode)
+        {
+            if (ModelState.IsValid)
+            {
+                var UserCodeSess = (UserCode)Session["CodeSession"];
+                if (userCode.Code == UserCodeSess.Code)
+                {
+                    UserCodeSess.Status = true;
+                    Session["CodeSession"] = UserCodeSess;
+                    return RedirectToAction("NewPassword");
+                }
+                else
+                {
+                    ModelState.AddModelError("Code", "Mã xác thực chưa đúng");
+                }
+            }
+            return View();
+        }
+
+        public ActionResult NewPassword()
+        {
+            var userCodeSess = (UserCode)Session["CodeSession"];
+            if (userCodeSess == null || userCodeSess.Status == false)
+            {
+                return View("Forget");
+            }
+            var user = customerModel.GetByEmail(userCodeSess.Email);
+            NewPasswordViewModel model = new NewPasswordViewModel();
+            model.ID = user.ID;
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NewPassword(NewPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Customer customer = new Customer();
+                customer.ID = model.ID;
+                customer.Password = model.Password;
+                bool result = customerModel.UpdatePassword(customer);
+                if (result)
+                {
+                    TempData["Message"] = "Lấy lại mật khẩu thành công";
+                    TempData["Status"] = "success";
+                    return RedirectToAction("Login");
+                }
+            }
+            return View(model);
+        }
     }
 }

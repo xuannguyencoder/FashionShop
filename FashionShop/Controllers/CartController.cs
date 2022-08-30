@@ -1,9 +1,7 @@
 ﻿using FashionShop.Models;
 using FashionShop.Models.Common;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
@@ -11,10 +9,11 @@ namespace FashionShop.Controllers
 {
     public class CartController : Controller
     {
-        ProductModel productModel = null;
-        ProductDetailModel proDetailModel = null;
-        CartModel cartModel = null;
-        ProductImageModel proImageModel = null;
+        private ProductModel productModel = null;
+        private ProductDetailModel proDetailModel = null;
+        private CartModel cartModel = null;
+        private ProductImageModel proImageModel = null;
+
         public ActionResult Index()
         {
             cartModel = new CartModel();
@@ -24,6 +23,7 @@ namespace FashionShop.Controllers
             ViewBag.CartTotal = cartModel.getCartTotal();
             return View(model);
         }
+
         public ActionResult AddItem(long ID)
         {
             productModel = new ProductModel();
@@ -63,7 +63,7 @@ namespace FashionShop.Controllers
                 }
                 Session[Constant.CartSession] = list;
             }
-            else //Cart == null 
+            else //Cart == null
             {
                 var item = new CartItem();
                 item.Quantity = 1;
@@ -76,6 +76,7 @@ namespace FashionShop.Controllers
             }
             return RedirectToRoute("giohang");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddItem()
@@ -102,7 +103,7 @@ namespace FashionShop.Controllers
                 var cart = Session[Constant.CartSession];
                 if (cart != null)
                 {
-                    var list = (List<CartItem>)cart;   
+                    var list = (List<CartItem>)cart;
                     if (list.Exists(x => x.ProductDetail.ID == proDetail.ID)) // item cart có trong giỏ hàng
                     {
                         foreach (var item in list)
@@ -154,6 +155,7 @@ namespace FashionShop.Controllers
             cartModel.DeleteAll();
             return Json(new { status = true });
         }
+
         //using ajax
         public JsonResult Delete(long productDetailID)
         {
@@ -161,6 +163,7 @@ namespace FashionShop.Controllers
             cartModel.Delete(productDetailID);
             return Json(new { status = true });
         }
+
         //using ajax
         public JsonResult Update(string cartJson)
         {
@@ -183,6 +186,7 @@ namespace FashionShop.Controllers
             cartModel.Update(sessionCart);
             return Json(new { status = true });
         }
+
         public ActionResult Success()
         {
             return View();

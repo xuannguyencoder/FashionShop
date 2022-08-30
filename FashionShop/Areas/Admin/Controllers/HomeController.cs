@@ -1,36 +1,25 @@
 ﻿using FashionShop.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace FashionShop.Areas.Admin.Controllers
 {
     public class HomeController : BaseController
     {
-        [HttpPost]
-        public JsonResult GetValue()
-        {
-            return Json(new { min = 20, max = 80 }, JsonRequestBehavior.AllowGet);
-        }
-        [HttpPost]
-        public JsonResult Change()
-        {
-            return Json(new { min = 20, max = 80 }, JsonRequestBehavior.AllowGet);
-        }
         public ActionResult Index()
         {
             return View();
         }
+
         [HttpPost]
         public JsonResult RevenueForTheWeek()
         {
             OrderModel orderModel = new OrderModel();
             List<object> data = new List<object>();
             var date = GetFirstDayOfWeek(DateTime.Now);
-            for (int i =0; i<7; i++)
+            for (int i = 0; i < 7; i++)
             {
                 var orders = orderModel.ListALL().Where(x =>
                     x.CreatedDate.GetValueOrDefault().ToString("dd/MM/yyyy") == date.AddDays(i).ToString("dd/MM/yyyy"));
@@ -38,7 +27,7 @@ namespace FashionShop.Areas.Admin.Controllers
                 decimal total = 0;
                 foreach (var item in orders)
                 {
-                    total += item.OrderDetails.Sum(x=>x.Quantity *x.Price).GetValueOrDefault(0);
+                    total += item.OrderDetails.Sum(x => x.Quantity * x.Price).GetValueOrDefault(0);
                 }
                 data.Add(total);
             }
@@ -54,6 +43,7 @@ namespace FashionShop.Areas.Admin.Controllers
             int noreply = feedbackcount - reply;
             return Json(new { reply, noreply }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public JsonResult CustomerCount()
         {
@@ -61,6 +51,7 @@ namespace FashionShop.Areas.Admin.Controllers
             int customercount = customerModel.ListAll().Count();
             return Json(new { customercount }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public JsonResult ArticleCount()
         {
@@ -68,6 +59,7 @@ namespace FashionShop.Areas.Admin.Controllers
             int articlecount = articleModel.ListAll().Count();
             return Json(new { articlecount }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public JsonResult RevenueForDay()
         {
@@ -81,6 +73,7 @@ namespace FashionShop.Areas.Admin.Controllers
             }
             return Json(new { revenueforday = total }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public JsonResult ProductCount()
         {
@@ -88,6 +81,7 @@ namespace FashionShop.Areas.Admin.Controllers
             int productcount = productModel.ListAll().Count(); // tổng số lượng sản phẩm
             return Json(new { productcount }, JsonRequestBehavior.AllowGet);
         }
+
         public DateTime GetFirstDayOfWeek(DateTime dayInWeek)
         {
             DayOfWeek firstDay = DayOfWeek.Monday;
